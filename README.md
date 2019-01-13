@@ -9,6 +9,21 @@ This project is still at its early stages, so keep in mind the workflow and pre-
 - Creating mutiple test scenarios
 - Creating, updating (load/save) reports
 
+## Getting started
+
+Within embedded Electron:
+```
+git clone https://github.com/franck-boucher/TestReport.git
+yarn install
+yarn dev
+```
+or simply `yarn start` for the browser version.
+
+Build the Electron packed app:
+```
+yarn electron-build
+```
+
 ## TODO
 
 - Keep track of currently saved file, not asking of new path to save it

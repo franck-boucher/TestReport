@@ -1,0 +1,83 @@
+{
+  "name": "test-report",
+  "version": "1.0.0",
+  "private": true,
+  "author": {
+    "name": "Franck Boucher",
+    "email": "boucher.fk@gmail.com",
+    "url": "https://fboucher.com"
+  },
+  "dependencies": {
+    "date-fns": "^1.30.1",
+    "papaparse": "^4.6.3",
+    "react": "^16.7.0",
+    "react-datepicker": "^2.0.0",
+    "react-dom": "^16.7.0",
+    "react-scripts": "2.1.3",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.84.0"
+  },
+  "build": {
+    "extends": null,
+    "appId": "com.fboucher.test-report",
+    "productName": "TestReport",
+    "files": [
+      "./build/**/*",
+      "./src/electron-starter.js"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 120,
+          "y": 220
+        },
+        {
+          "x": 400,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "squirrel",
+      "icon": "build/favicon.ico"
+    },
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+  "homepage": "./",
+  "main": "./src/electron-starter.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "dev": "nf start -p 3000",
+    "electron-build": "electron-builder",
+    "release": "yarn build && electron-builder --publish=always",
+    "pack": "yarn build && yarn electron-build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "electron": "^4.0.1",
+    "electron-builder": "^20.38.4",
+    "foreman": "^3.0.1"
+  }
+}

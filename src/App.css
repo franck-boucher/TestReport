@@ -1,0 +1,26 @@
+html,
+body {
+  background-color: #ecf0f1;
+}
+#app-title {
+  margin-bottom: 0;
+  align-self: center;
+  padding-left: 1em;
+}
+
+.ui.form .field,
+.ui.form .field:last-child,
+.ui.form .fields:last-child .field {
+  margin: 0 0 0.5em;
+}
+.ui.primary.button.basic-inverted:hover,
+.ui.blue.label.basic-inverted:hover {
+  color: white !important;
+  background-color: #2185d0 !important;
+}
+#test-status.ui.dividing.header {
+  font-size: 1.15rem;
+  padding-top: 0.7em;
+  padding-bottom: 0.55em;
+  border-bottom: 2px solid rgba(34, 36, 38, 0.15);
+}

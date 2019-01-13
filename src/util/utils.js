@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import frLocale from 'date-fns/locale/fr';
 import { format } from 'date-fns';
 
 import { EmptyCSV } from './constants';
@@ -66,10 +67,10 @@ export const generateCSV = userStory => {
   data[6][2] = userStory.comments;
   data[7][2] = userStory.asumptions;
   data[8][2] = userStory.startTestingDate
-    ? format(userStory.startTestingDate, 'MM/DD/YYYY')
+    ? formatDate(userStory.startTestingDate)
     : null;
   data[9][2] = userStory.endTestingDate
-    ? format(userStory.endTestingDate, 'MM/DD/YYYY')
+    ? formatDate(userStory.endTestingDate)
     : null;
   userStory.scenarios.forEach(scenario => {
     data.push([
@@ -84,4 +85,8 @@ export const generateCSV = userStory => {
     ]);
   });
   return Papa.unparse(data, { delimiter: ';' });
+};
+
+export const formatDate = date => {
+  return format(date, 'MM/dd/yyyy', { locale: frLocale });
 };

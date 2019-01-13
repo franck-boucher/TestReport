@@ -62,7 +62,7 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "dev": "nf start -p 3000",
-    "electron-build": "electron-builder",
+    "electron-build": "yarn build && electron-builder",
     "release": "yarn build && electron-builder --publish=always",
     "pack": "yarn build && yarn electron-build"
   },
@@ -78,6 +78,7 @@
   "devDependencies": {
     "electron": "^4.0.1",
     "electron-builder": "^20.38.4",
+    "electron-builder-squirrel-windows": "^20.38.3",
     "foreman": "^3.0.1"
   }
 }

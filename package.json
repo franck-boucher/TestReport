@@ -46,7 +46,7 @@
       ]
     },
     "win": {
-      "target": "squirrel",
+      "target": "portable",
       "icon": "build/favicon.ico"
     },
     "directories": {
@@ -78,7 +78,6 @@
   "devDependencies": {
     "electron": "^4.0.1",
     "electron-builder": "^20.38.4",
-    "electron-builder-squirrel-windows": "^20.38.3",
     "foreman": "^3.0.1"
   }
 }

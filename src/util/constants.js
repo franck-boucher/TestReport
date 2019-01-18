@@ -1,8 +1,10 @@
+import { Map, List } from 'immutable';
+
 export const Environments = ['DEV', 'RCT', 'PROD'];
 
 export const TestStatuses = ['PENDING', 'OK', 'KO'];
 
-export const EmptyScenario = {
+export const EmptyScenario = Map({
   testStatus: TestStatuses[0],
   title: '',
   description: '',
@@ -10,20 +12,20 @@ export const EmptyScenario = {
   expectedResult: '',
   defects: '',
   comments: ''
-};
+});
 
-export const EmptyUserStory = {
+export const EmptyUserStory = Map({
   userStory: '',
   environment: 'RCT',
   type: 'Manual functional testing',
   author: '',
-  tools: ['Postman'],
+  tools: List(['Postman']),
   comments: '',
   asumptions: '',
   startTestingDate: new Date(),
   endTestingDate: new Date(),
-  scenarios: []
-};
+  scenarios: List([])
+});
 
 export const DialogConfig = {
   properties: ['openFile'],
@@ -33,19 +35,19 @@ export const DialogConfig = {
   ]
 };
 
-export const EmptyCSV = [
-  ['', '', '', '', '', '', '', ''],
-  ['', 'User story:', '', '', '', '', '', ''],
-  ['', 'Environment:', '', '', '', '', '', ''],
-  ['', 'Type:', '', '', '', '', '', ''],
-  ['', 'Author:', '', '', '', '', '', ''],
-  ['', 'Tools:', '', '', '', '', '', ''],
-  ['', 'General comment:', '', '', '', '', '', ''],
-  ['', 'Asumptions: ', '', '', '', '', '', ''],
-  ['', 'Start testing date:', '', '', '', '', '', ''],
-  ['', 'End testing date', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', ''],
-  [
+export const EmptyCSV = List([
+  List(['', '', '', '', '', '', '', '']),
+  List(['', 'User story:', '', '', '', '', '', '']),
+  List(['', 'Environment:', '', '', '', '', '', '']),
+  List(['', 'Type:', '', '', '', '', '', '']),
+  List(['', 'Author:', '', '', '', '', '', '']),
+  List(['', 'Tools:', '', '', '', '', '', '']),
+  List(['', 'General comment:', '', '', '', '', '', '']),
+  List(['', 'Asumptions: ', '', '', '', '', '', '']),
+  List(['', 'Start testing date:', '', '', '', '', '', '']),
+  List(['', 'End testing date', '', '', '', '', '', '']),
+  List(['', '', '', '', '', '', '', '']),
+  List([
     '',
     'Test status',
     'Scenario title',
@@ -54,5 +56,5 @@ export const EmptyCSV = [
     'Expected result',
     'Defects',
     'Comments'
-  ]
-];
+  ])
+]);

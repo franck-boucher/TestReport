@@ -18,7 +18,7 @@ class TestScenarios extends Component {
   };
   addNewScenario = () => {
     const uuid = generateUuid();
-    const newScenario = { uuid, ...EmptyScenario };
+    const newScenario = { uuid, ...EmptyScenario.toJS() };
     const { scenarios } = this.props.userStoryInfos;
     scenarios.push(newScenario);
     this.props.handleFieldChange(null, { id: 'scenarios', value: scenarios });

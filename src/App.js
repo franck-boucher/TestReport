@@ -15,24 +15,17 @@ const fs = window.require('fs');
 
 class App extends Component {
   state = {
-    userStory: '',
-    environment: 'RCT',
-    type: 'Manual functional testing',
-    author: '',
-    tools: ['Postman'],
-    comments: '',
-    asumptions: '',
-    startTestingDate: new Date(),
-    endTestingDate: new Date(),
-    scenarios: [],
+    userStory: { ...EmptyUserStory.toJS() },
     dimmed: false
   };
   handleFieldChange = (e, { id, value }) => {
-    this.setState({ [id]: value });
+    const { userStory } = this.state;
+    userStory[id] = value;
+    this.setState({ userStory });
   };
   newUserStory = () => {
-    const newState = { ...this.state, ...EmptyUserStory };
-    this.setState(newState);
+    const userStory = { ...EmptyUserStory.toJS() };
+    this.setState({ userStory });
   };
   openFile = () => {
     this.setState({ dimmed: true });
@@ -41,7 +34,7 @@ class App extends Component {
       if (filePaths) {
         const fileContent = fs.readFileSync(filePaths[0]).toString();
         const userStory = parseCSV(fileContent);
-        this.setState({ ...userStory });
+        this.setState({ userStory });
       } else {
         console.error(
           'Error while trying to select file path from file system'
@@ -50,7 +43,7 @@ class App extends Component {
     });
   };
   saveFile = () => {
-    const csvString = generateCSV(this.state);
+    const csvString = generateCSV(this.state.userStory);
     this.setState({ dimmed: true });
     dialog.showSaveDialog(DialogConfig, filePath => {
       this.setState({ dimmed: false });
@@ -73,7 +66,7 @@ class App extends Component {
         menuItem: 'User story infos',
         render: () => (
           <UserStoryInfos
-            userStoryInfos={this.state}
+            userStoryInfos={this.state.userStory}
             handleFieldChange={this.handleFieldChange}
           />
         )
@@ -83,7 +76,7 @@ class App extends Component {
         render: () => (
           <TestScenarios
             handleFieldChange={this.handleFieldChange}
-            userStoryInfos={this.state}
+            userStoryInfos={this.state.userStory}
           />
         )
       }
@@ -125,7 +118,7 @@ class App extends Component {
             <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
           </Grid.Column>
           <Grid.Column width={6}>
-            <TestStatus scenarios={this.state.scenarios} />
+            <TestStatus scenarios={this.state.userStory.scenarios} />
           </Grid.Column>
         </Grid>
       </div>

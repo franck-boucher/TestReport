@@ -58,7 +58,7 @@ export const parseCSV = csvString => {
 };
 
 export const generateCSV = userStory => {
-  const data = [...EmptyCSV];
+  const data = [...EmptyCSV.toJS()];
   data[1][2] = userStory.userStory;
   data[2][2] = userStory.environment;
   data[3][2] = userStory.type;

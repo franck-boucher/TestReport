@@ -8,7 +8,8 @@ export const EmptyScenario = Map({
   testStatus: TestStatuses[0],
   title: '',
   description: '',
-  inputParameters: '',
+  urlParameters: '',
+  headers: '',
   expectedResult: '',
   defects: '',
   comments: ''
@@ -52,7 +53,8 @@ export const EmptyCSV = List([
     'Test status',
     'Scenario title',
     'Scenario description',
-    'Input parameters',
+    'URL parameters',
+    'Headers',
     'Expected result',
     'Defects',
     'Comments'

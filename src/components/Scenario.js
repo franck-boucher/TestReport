@@ -14,7 +14,8 @@ class Scenario extends Component {
       testStatus,
       title,
       description,
-      inputParameters,
+      urlParameters,
+      headers,
       expectedResult,
       defects,
       comments
@@ -62,12 +63,20 @@ class Scenario extends Component {
           />
         </Form.Field>
         <Form.Field>
-          <label>Input parameters</label>
+          <label>URL parameters</label>
           <Input
-            id="inputParameters"
+            id="urlParameters"
             icon="code"
             iconPosition="left"
-            value={inputParameters}
+            value={urlParameters}
+            onChange={this.handleFieldChange}
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>Headers</label>
+          <TextArea
+            id="headers"
+            value={headers}
             onChange={this.handleFieldChange}
           />
         </Form.Field>

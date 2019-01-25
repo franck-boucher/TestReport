@@ -25,6 +25,13 @@ export const colorStatus = status => {
   else return 'yellow';
 };
 
+export const cloneScenario = scenario => {
+  const newScenario = { ...scenario };
+  newScenario.uuid = generateUuid();
+  newScenario.title = 'Copy of ' + newScenario.title;
+  return newScenario;
+};
+
 export const parseCSV = csvString => {
   const { data } = Papa.parse(csvString);
   let i = 12;

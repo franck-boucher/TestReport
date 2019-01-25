@@ -9,7 +9,7 @@ import {
 } from 'semantic-ui-react';
 
 import { EmptyScenario } from '../util/constants';
-import { generateUuid, colorStatus } from '../util/utils';
+import { generateUuid, colorStatus, cloneScenario } from '../util/utils';
 import Scenario from './Scenario';
 
 class TestScenarios extends Component {
@@ -31,6 +31,19 @@ class TestScenarios extends Component {
     Object.assign(scenario, updatedScenario);
     this.props.handleFieldChange(null, { id: 'scenarios', value: scenarios });
   };
+  cloneScenario = uuid => {
+    const { scenarios } = this.props.userStoryInfos;
+    const indexScenarioToClone = scenarios
+      .map(scenario => scenario.uuid)
+      .indexOf(uuid);
+    const scenarioToClone = scenarios.find(scenario => scenario.uuid === uuid);
+    const newScenario = cloneScenario(scenarioToClone);
+    scenarios.splice(indexScenarioToClone + 1, 0, newScenario);
+    this.props.handleFieldChange(null, {
+      id: 'scenarios',
+      value: scenarios
+    });
+  };
   deleteScenario = uuid => {
     const { scenarios } = this.props.userStoryInfos;
     const newScenarios = scenarios.filter(scenario => scenario.uuid !== uuid);
@@ -46,6 +59,7 @@ class TestScenarios extends Component {
         isActive={this.props.selectedScenario === scenario.uuid}
         scenario={scenario}
         handleClick={this.setActive}
+        handleClone={this.cloneScenario}
         handleDelete={this.deleteScenario}
       >
         <Scenario scenario={scenario} updateScenario={this.updateScenario} />
@@ -88,6 +102,7 @@ const AccordionSegment = ({
   isActive,
   handleClick,
   scenario,
+  handleClone,
   handleDelete
 }) => (
   <Segment
@@ -110,7 +125,18 @@ const AccordionSegment = ({
           width={10}
           onClick={() => handleClick(scenario.uuid)}
         >
-          {scenario.title && <Header size="small">{scenario.title}</Header>}
+          {scenario.title && (
+            <Header
+              size="small"
+              style={{
+                width: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {scenario.title}
+            </Header>
+          )}
           {!scenario.title && (
             <span style={{ fontStyle: 'italic' }}>
               (No title for this scenario)
@@ -121,6 +147,16 @@ const AccordionSegment = ({
           width={5}
           style={{ justifyContent: 'flex-end', ...styles.centered }}
         >
+          <Button
+            onClick={() => handleClone(scenario.uuid)}
+            compact
+            size="tiny"
+            color="blue"
+            inverted
+            icon
+          >
+            <Icon name="clone" />
+          </Button>
           <Button
             onClick={() => handleDelete(scenario.uuid)}
             compact

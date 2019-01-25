@@ -13,20 +13,17 @@ import { generateUuid, colorStatus } from '../util/utils';
 import Scenario from './Scenario';
 
 class TestScenarios extends Component {
-  state = {
-    active: ''
-  };
   addNewScenario = () => {
     const uuid = generateUuid();
     const newScenario = { uuid, ...EmptyScenario.toJS() };
     const { scenarios } = this.props.userStoryInfos;
     scenarios.push(newScenario);
     this.props.handleFieldChange(null, { id: 'scenarios', value: scenarios });
-    this.setState({ active: uuid });
+    this.props.selectScenario(uuid);
   };
   setActive = uuid => {
-    const active = this.state.active !== uuid ? uuid : '';
-    this.setState({ active });
+    const active = this.props.selectedScenario !== uuid ? uuid : '';
+    this.props.selectScenario(active);
   };
   updateScenario = updatedScenario => {
     const { scenarios } = this.props.userStoryInfos;
@@ -46,7 +43,7 @@ class TestScenarios extends Component {
     const scenarios = this.props.userStoryInfos.scenarios.map(scenario => (
       <AccordionSegment
         key={scenario.uuid}
-        isActive={this.state.active === scenario.uuid}
+        isActive={this.props.selectedScenario === scenario.uuid}
         scenario={scenario}
         handleClick={this.setActive}
         handleDelete={this.deleteScenario}

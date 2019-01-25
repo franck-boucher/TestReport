@@ -16,12 +16,20 @@ const fs = window.require('fs');
 class App extends Component {
   state = {
     userStory: { ...EmptyUserStory.toJS() },
-    dimmed: false
+    dimmed: false,
+    selectedScenario: '',
+    activeTabIndex: 0
   };
   handleFieldChange = (e, { id, value }) => {
     const { userStory } = this.state;
     userStory[id] = value;
     this.setState({ userStory });
+  };
+  handleTabChange = (e, { activeIndex }) => {
+    this.setState({ activeTabIndex: activeIndex });
+  };
+  selectScenario = scenarioUuid => {
+    this.setState({ selectedScenario: scenarioUuid, activeTabIndex: 1 });
   };
   newUserStory = () => {
     const userStory = { ...EmptyUserStory.toJS() };
@@ -75,6 +83,8 @@ class App extends Component {
         menuItem: <Menu.Item key="messages">Test scenarios</Menu.Item>,
         render: () => (
           <TestScenarios
+            selectScenario={this.selectScenario}
+            selectedScenario={this.state.selectedScenario}
             handleFieldChange={this.handleFieldChange}
             userStoryInfos={this.state.userStory}
           />
@@ -115,10 +125,18 @@ class App extends Component {
         <Dimmer active={this.state.dimmed} page />
         <Grid>
           <Grid.Column width={10}>
-            <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+            <Tab
+              menu={{ secondary: true, pointing: true }}
+              panes={panes}
+              activeIndex={this.state.activeTabIndex}
+              onTabChange={this.handleTabChange}
+            />
           </Grid.Column>
           <Grid.Column width={6}>
-            <TestStatus scenarios={this.state.userStory.scenarios} />
+            <TestStatus
+              scenarios={this.state.userStory.scenarios}
+              selectScenario={this.selectScenario}
+            />
           </Grid.Column>
         </Grid>
       </div>

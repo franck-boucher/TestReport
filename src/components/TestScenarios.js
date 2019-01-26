@@ -122,7 +122,7 @@ const AccordionSegment = ({
         </Grid.Column>
         <Grid.Column
           style={styles.centered}
-          width={10}
+          width={12}
           onClick={() => handleClick(scenario.uuid)}
         >
           {scenario.title && (
@@ -144,7 +144,7 @@ const AccordionSegment = ({
           )}
         </Grid.Column>
         <Grid.Column
-          width={5}
+          width={3}
           style={{ justifyContent: 'flex-end', ...styles.centered }}
         >
           <Button

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Input, TextArea, Dropdown, Grid } from 'semantic-ui-react';
 
 import { TestStatuses } from '../util/constants';
+import ExpendableLabel from './ExpendableLabel';
 
 class Scenario extends Component {
   handleFieldChange = (e, { id, value }) => {
@@ -89,20 +90,22 @@ class Scenario extends Component {
           />
         </Form.Field>
         <Form.Field>
-          <label>Defects</label>
-          <TextArea
-            id="defects"
-            value={defects}
-            onChange={this.handleFieldChange}
-          />
+          <ExpendableLabel label="Defects" defaultExpended={!!defects}>
+            <TextArea
+              id="defects"
+              value={defects}
+              onChange={this.handleFieldChange}
+            />
+          </ExpendableLabel>
         </Form.Field>
         <Form.Field>
-          <label>Comments</label>
-          <TextArea
-            id="comments"
-            value={comments}
-            onChange={this.handleFieldChange}
-          />
+          <ExpendableLabel label="Comments" defaultExpended={!!comments}>
+            <TextArea
+              id="comments"
+              value={comments}
+              onChange={this.handleFieldChange}
+            />
+          </ExpendableLabel>
         </Form.Field>
       </Form>
     );

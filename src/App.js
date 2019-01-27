@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Grid, Tab, Menu, Header, Dropdown, Dimmer } from 'semantic-ui-react';
+import { Grid, Tab, Dimmer } from 'semantic-ui-react';
 
 import './App.css';
 
 import UserStoryInfos from './components/UserStoryInfos';
 import TestStatus from './components/TestStatus';
 import TestScenarios from './components/TestScenarios';
+import MenuBar from './components/MenuBar';
+import Preferences from './components/Preferences';
 import { EmptyUserStory, DialogConfig } from './util/constants';
 import { parseCSV, generateCSV } from './util/utils';
 
@@ -15,10 +17,11 @@ const fs = window.require('fs');
 
 class App extends Component {
   state = {
-    userStory: { ...EmptyUserStory.toJS() },
+    userStory: { ...EmptyUserStory().toJS() },
     dimmed: false,
     selectedScenario: '',
-    activeTabIndex: 0
+    activeTabIndex: 0,
+    preferencesModal: false
   };
   handleFieldChange = (e, { id, value }) => {
     const { userStory } = this.state;
@@ -28,11 +31,17 @@ class App extends Component {
   handleTabChange = (e, { activeIndex }) => {
     this.setState({ activeTabIndex: activeIndex });
   };
+  openModal = modal => {
+    this.setState({ [modal]: true });
+  };
+  closeModal = modal => {
+    this.setState({ [modal]: false });
+  };
   selectScenario = scenarioUuid => {
     this.setState({ selectedScenario: scenarioUuid, activeTabIndex: 1 });
   };
   newUserStory = () => {
-    const userStory = { ...EmptyUserStory.toJS() };
+    const userStory = { ...EmptyUserStory().toJS() };
     this.setState({ userStory });
   };
   openFile = () => {
@@ -80,7 +89,7 @@ class App extends Component {
         )
       },
       {
-        menuItem: <Menu.Item key="messages">Test scenarios</Menu.Item>,
+        menuItem: 'Test scenario',
         render: () => (
           <TestScenarios
             selectScenario={this.selectScenario}
@@ -91,37 +100,18 @@ class App extends Component {
         )
       }
     ];
-    const dropdownMenu = (
-      <Dropdown icon="bars" direction="left">
-        <Dropdown.Menu>
-          <Dropdown.Item
-            icon="file outline"
-            text="New"
-            onClick={this.newUserStory}
-          />
-          <Dropdown.Item
-            icon="folder open outline"
-            text="Open..."
-            onClick={this.openFile}
-          />
-          <Dropdown.Item
-            icon="save outline"
-            text="Save as..."
-            onClick={this.saveFile}
-          />
-        </Dropdown.Menu>
-      </Dropdown>
-    );
     return (
       <div style={{ padding: '1em 2em' }}>
-        <Menu fixed="top">
-          <Header id="app-title" size="medium">
-            TestReport
-          </Header>
-          <Menu.Menu position="right">
-            <Menu.Item>{dropdownMenu}</Menu.Item>
-          </Menu.Menu>
-        </Menu>
+        <MenuBar
+          newUserStory={this.newUserStory}
+          openFile={this.openFile}
+          saveFile={this.saveFile}
+          preferences={() => this.openModal('preferencesModal')}
+        />
+        <Preferences
+          isModalOpen={this.state.preferencesModal}
+          handleClose={() => this.closeModal('preferencesModal')}
+        />
         <Dimmer active={this.state.dimmed} page />
         <Grid>
           <Grid.Column width={10}>

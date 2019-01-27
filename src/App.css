@@ -1,5 +1,6 @@
 html,
-body {
+body,
+#preferences.ui.modal > .content {
   background-color: #ecf0f1;
 }
 #app-title {

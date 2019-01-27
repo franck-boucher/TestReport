@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "date-fns": "^2.0.0-alpha.27",
+    "electron-store": "^2.0.0",
     "immutable": "^4.0.0-rc.12",
     "papaparse": "^4.6.3",
     "react": "^16.7.0",

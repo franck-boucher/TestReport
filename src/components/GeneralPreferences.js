@@ -8,7 +8,6 @@ const GeneralPreferences = ({ general, handleFieldChange }) => {
   const toggle = () => {
     handleFieldChange(null, { id: 'darkMode', value: !darkMode });
   };
-  console.log(language);
   return (
     <Segment>
       <Form>

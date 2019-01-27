@@ -9,6 +9,7 @@ import TestStatus from './components/TestStatus';
 import TestScenarios from './components/TestScenarios';
 import MenuBar from './components/MenuBar';
 import Preferences from './components/Preferences';
+import About from './components/About';
 import { EmptyUserStory, DialogConfig } from './util/constants';
 import { parseCSV, generateCSV } from './util/utils';
 
@@ -21,7 +22,8 @@ class App extends Component {
     dimmed: false,
     selectedScenario: '',
     activeTabIndex: 0,
-    preferencesModal: false
+    preferencesModal: false,
+    aboutModal: false
   };
   handleFieldChange = (e, { id, value }) => {
     const { userStory } = this.state;
@@ -107,10 +109,15 @@ class App extends Component {
           openFile={this.openFile}
           saveFile={this.saveFile}
           preferences={() => this.openModal('preferencesModal')}
+          about={() => this.openModal('aboutModal')}
         />
         <Preferences
           isModalOpen={this.state.preferencesModal}
           handleClose={() => this.closeModal('preferencesModal')}
+        />
+        <About
+          isModalOpen={this.state.aboutModal}
+          handleClose={() => this.closeModal('aboutModal')}
         />
         <Dimmer active={this.state.dimmed} page />
         <Grid>

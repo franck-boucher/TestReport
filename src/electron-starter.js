@@ -7,10 +7,44 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
 
-const defaultConfig = require('./util/defaultConfig.js');
 const Store = require('electron-store');
 const store = new Store();
-if (store.size === 0) store.store = defaultConfig;
+if (store.size === 0) {
+  store.store = {
+    general: {
+      language: 'en',
+      darkMode: false
+    },
+    issueTrackingApp: {
+      jira: {
+        url: '',
+        authorizationToken: ''
+      }
+    },
+    emptyUserStory: {
+      userStory: '',
+      environment: 'RCT',
+      type: 'Manual functional testing',
+      author: '',
+      tools: ['Postman'],
+      comments: '',
+      asumptions: '',
+      startTestingDate: 'TODAY',
+      endTestingDate: 'TODAY',
+      scenarios: []
+    },
+    emptyScenario: {
+      testStatus: 'PENDING',
+      title: '',
+      description: '',
+      urlParameters: '',
+      headers: '',
+      expectedResult: '',
+      defects: '',
+      comments: ''
+    }
+  };
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

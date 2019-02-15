@@ -25,10 +25,10 @@ class App extends Component {
     preferencesModal: false,
     aboutModal: false
   };
-  handleFieldChange = (e, { id, value }) => {
+  handleFieldChange = (e, { id, value }, callback) => {
     const { userStory } = this.state;
     userStory[id] = value;
-    this.setState({ userStory });
+    this.setState({ userStory }, callback);
   };
   handleTabChange = (e, { activeIndex }) => {
     this.setState({ activeTabIndex: activeIndex });

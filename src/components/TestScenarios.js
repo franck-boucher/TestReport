@@ -39,10 +39,14 @@ class TestScenarios extends Component {
     const scenarioToClone = scenarios.find(scenario => scenario.uuid === uuid);
     const newScenario = cloneScenario(scenarioToClone);
     scenarios.splice(indexScenarioToClone + 1, 0, newScenario);
-    this.props.handleFieldChange(null, {
-      id: 'scenarios',
-      value: scenarios
-    });
+    this.props.handleFieldChange(
+      null,
+      {
+        id: 'scenarios',
+        value: scenarios
+      },
+      () => this.setActive(newScenario.uuid)
+    );
   };
   deleteScenario = uuid => {
     const { scenarios } = this.props.userStoryInfos;

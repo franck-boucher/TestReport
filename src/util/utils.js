@@ -4,6 +4,8 @@ import { format } from 'date-fns';
 
 import { EmptyCSV } from './constants';
 
+const Store = window.require('electron-store');
+
 export const generateUuid = () => {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
     (
@@ -26,9 +28,11 @@ export const colorStatus = status => {
 };
 
 export const cloneScenario = scenario => {
+  const store = new Store();
   const newScenario = { ...scenario };
   newScenario.uuid = generateUuid();
   newScenario.title = 'Copy of ' + newScenario.title;
+  newScenario.testStatus = store.get('emptyScenario').testStatus;
   return newScenario;
 };
 

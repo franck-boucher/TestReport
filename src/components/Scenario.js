@@ -1,115 +1,102 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, Input, TextArea, Dropdown, Grid } from 'semantic-ui-react';
 
 import { TestStatuses } from '../util/constants';
 import ExpendableLabel from './ExpendableLabel';
 
-class Scenario extends Component {
-  handleFieldChange = (e, { id, value }) => {
-    const { scenario } = this.props;
+const Scenario = ({ scenario, updateScenario }) => {
+  const handleFieldChange = (e, { id, value }) => {
     scenario[id] = value;
-    this.props.updateScenario(scenario);
+    updateScenario(scenario);
   };
-  render() {
-    const {
-      testStatus,
-      title,
-      description,
-      urlParameters,
-      headers,
-      expectedResult,
-      defects,
-      comments
-    } = this.props.scenario;
-    const statusOptions = TestStatuses.map(status => {
-      return { key: status, text: status, value: status };
-    });
-    return (
-      <Form>
-        <Grid columns={2}>
-          <Grid.Row>
-            <Grid.Column width={11}>
-              <Form.Field>
-                <label>Title</label>
-                <Input
-                  id="title"
-                  icon="bookmark outline"
-                  iconPosition="left"
-                  value={title}
-                  onChange={this.handleFieldChange}
-                />
-              </Form.Field>
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <Form.Field>
-                <label>Test status</label>
-                <Dropdown
-                  id="testStatus"
-                  fluid
-                  selection
-                  options={statusOptions}
-                  value={testStatus}
-                  onChange={this.handleFieldChange}
-                />
-              </Form.Field>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <Form.Field>
-          <label>Description</label>
+  const statusOptions = TestStatuses.map(status => {
+    return { key: status, text: status, value: status };
+  });
+  return (
+    <Form>
+      <Grid columns={2}>
+        <Grid.Row>
+          <Grid.Column width={11}>
+            <Form.Field>
+              <label>Title</label>
+              <Input
+                id="title"
+                icon="bookmark outline"
+                iconPosition="left"
+                value={scenario.title}
+                onChange={handleFieldChange}
+              />
+            </Form.Field>
+          </Grid.Column>
+          <Grid.Column width={5}>
+            <Form.Field>
+              <label>Test status</label>
+              <Dropdown
+                id="testStatus"
+                fluid
+                selection
+                options={statusOptions}
+                value={scenario.testStatus}
+                onChange={handleFieldChange}
+              />
+            </Form.Field>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+      <Form.Field>
+        <label>Description</label>
+        <TextArea
+          id="description"
+          value={scenario.description}
+          onChange={handleFieldChange}
+        />
+      </Form.Field>
+      <Form.Field>
+        <label>URL parameters</label>
+        <Input
+          id="urlParameters"
+          icon="code"
+          iconPosition="left"
+          value={scenario.urlParameters}
+          onChange={handleFieldChange}
+        />
+      </Form.Field>
+      <Form.Field>
+        <label>Headers</label>
+        <TextArea
+          id="headers"
+          value={scenario.headers}
+          onChange={handleFieldChange}
+        />
+      </Form.Field>
+      <Form.Field>
+        <label>Expected result</label>
+        <TextArea
+          id="expectedResult"
+          value={scenario.expectedResult}
+          onChange={handleFieldChange}
+        />
+      </Form.Field>
+      <Form.Field>
+        <ExpendableLabel label="Defects" defaultExpended={!!scenario.defects}>
           <TextArea
-            id="description"
-            value={description}
-            onChange={this.handleFieldChange}
+            id="defects"
+            value={scenario.defects}
+            onChange={handleFieldChange}
           />
-        </Form.Field>
-        <Form.Field>
-          <label>URL parameters</label>
-          <Input
-            id="urlParameters"
-            icon="code"
-            iconPosition="left"
-            value={urlParameters}
-            onChange={this.handleFieldChange}
-          />
-        </Form.Field>
-        <Form.Field>
-          <label>Headers</label>
+        </ExpendableLabel>
+      </Form.Field>
+      <Form.Field>
+        <ExpendableLabel label="Comments" defaultExpended={!!scenario.comments}>
           <TextArea
-            id="headers"
-            value={headers}
-            onChange={this.handleFieldChange}
+            id="comments"
+            value={scenario.comments}
+            onChange={handleFieldChange}
           />
-        </Form.Field>
-        <Form.Field>
-          <label>Expected result</label>
-          <TextArea
-            id="expectedResult"
-            value={expectedResult}
-            onChange={this.handleFieldChange}
-          />
-        </Form.Field>
-        <Form.Field>
-          <ExpendableLabel label="Defects" defaultExpended={!!defects}>
-            <TextArea
-              id="defects"
-              value={defects}
-              onChange={this.handleFieldChange}
-            />
-          </ExpendableLabel>
-        </Form.Field>
-        <Form.Field>
-          <ExpendableLabel label="Comments" defaultExpended={!!comments}>
-            <TextArea
-              id="comments"
-              value={comments}
-              onChange={this.handleFieldChange}
-            />
-          </ExpendableLabel>
-        </Form.Field>
-      </Form>
-    );
-  }
-}
+        </ExpendableLabel>
+      </Form.Field>
+    </Form>
+  );
+};
 
 export default Scenario;

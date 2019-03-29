@@ -1,5 +1,6 @@
 {
   "name": "test-report",
+  "description": "Small app that generates test reports of newly developed features",
   "version": "1.4.0",
   "private": true,
   "author": {
@@ -80,6 +81,7 @@
   "devDependencies": {
     "electron": "^4.0.1",
     "electron-builder": "^20.38.4",
-    "foreman": "^3.0.1"
+    "foreman": "^3.0.1",
+    "typescript": "^3.3.4000"
   }
 }

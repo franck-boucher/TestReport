@@ -23,12 +23,13 @@ class App extends Component {
     selectedScenario: '',
     activeTabIndex: 0,
     preferencesModal: false,
-    aboutModal: false
+    aboutModal: false,
+    isWorkSaved: true
   };
   handleFieldChange = (e, { id, value }, callback) => {
     const { userStory } = this.state;
     userStory[id] = value;
-    this.setState({ userStory }, callback);
+    this.setState({ userStory, isWorkSaved: false }, callback);
   };
   handleTabChange = (e, { activeIndex }) => {
     this.setState({ activeTabIndex: activeIndex });
@@ -53,7 +54,7 @@ class App extends Component {
       if (filePaths) {
         const fileContent = fs.readFileSync(filePaths[0]).toString();
         const userStory = parseCSV(fileContent);
-        this.setState({ userStory });
+        this.setState({ userStory, isWorkSaved: true });
       } else {
         console.error(
           'Error while trying to select file path from file system'
@@ -70,6 +71,8 @@ class App extends Component {
         fs.writeFile(filePath, csvString, err => {
           if (err) {
             console.error('Error while trying to save file to file system');
+          } else {
+            this.setState({ isWorkSaved: true });
           }
         });
       } else {
@@ -105,6 +108,7 @@ class App extends Component {
     return (
       <div style={{ padding: '1em 2em' }}>
         <MenuBar
+          isWorkSaved={this.state.isWorkSaved}
           newUserStory={this.newUserStory}
           openFile={this.openFile}
           saveFile={this.saveFile}

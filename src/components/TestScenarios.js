@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   Segment,
   Button,
@@ -13,6 +14,16 @@ import { generateUuid, colorStatus, cloneScenario } from '../util/utils';
 import Scenario from './Scenario';
 
 class TestScenarios extends Component {
+  onDragEnd = result => {
+    if (!result.destination) return; // dropped outside the list
+    this.reorderScenarios(result.source.index, result.destination.index);
+  };
+  reorderScenarios = (startIndex, endIndex) => {
+    const result = Array.from(this.props.userStoryInfos.scenarios);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    this.props.handleFieldChange(null, { id: 'scenarios', value: result });
+  };
   addNewScenario = () => {
     const uuid = generateUuid();
     const newScenario = { uuid, ...EmptyScenario().toJS() };
@@ -57,39 +68,76 @@ class TestScenarios extends Component {
     });
   };
   render() {
-    const scenarios = this.props.userStoryInfos.scenarios.map(scenario => (
-      <AccordionSegment
-        key={scenario.uuid}
-        isActive={this.props.selectedScenario === scenario.uuid}
-        scenario={scenario}
-        handleClick={this.setActive}
-        handleClone={this.cloneScenario}
-        handleDelete={this.deleteScenario}
-      >
-        <Scenario scenario={scenario} updateScenario={this.updateScenario} />
-      </AccordionSegment>
-    ));
+    const { scenarios } = this.props.userStoryInfos;
     return (
-      <Segment>
-        {this.props.userStoryInfos.scenarios.length > 0 && (
-          <Accordion>{scenarios}</Accordion>
-        )}
-        {this.props.userStoryInfos.scenarios.length === 0 && (
-          <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
-            No scenario defined
-          </p>
-        )}
-        <Button
-          primary
-          basic
-          onClick={this.addNewScenario}
-          style={{ marginTop: '1em' }}
-          fluid
-          className="basic-inverted"
-        >
-          New scenario
-        </Button>
-      </Segment>
+      <Fragment>
+        <Segment>
+          {this.props.userStoryInfos.scenarios.length > 0 && (
+            <DragDropContext onDragEnd={this.onDragEnd}>
+              <Droppable droppableId="droppable">
+                {(provided, snapshot) => (
+                  <div
+                    className="accordion ui"
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {scenarios.map((scenario, index) => (
+                      <Draggable
+                        key={scenario.uuid}
+                        draggableId={scenario.uuid}
+                        index={index}
+                      >
+                        {provided => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              marginBottom: '1em',
+                              ...provided.draggableProps.style
+                            }}
+                          >
+                            <AccordionSegment
+                              isActive={
+                                this.props.selectedScenario === scenario.uuid
+                              }
+                              scenario={scenario}
+                              handleClick={this.setActive}
+                              handleClone={this.cloneScenario}
+                              handleDelete={this.deleteScenario}
+                            >
+                              <Scenario
+                                scenario={scenario}
+                                updateScenario={this.updateScenario}
+                              />
+                            </AccordionSegment>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
+          {this.props.userStoryInfos.scenarios.length === 0 && (
+            <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
+              No scenario defined
+            </p>
+          )}
+          <Button
+            primary
+            basic
+            onClick={this.addNewScenario}
+            style={{ marginTop: '1em' }}
+            fluid
+            className="basic-inverted"
+          >
+            New scenario
+          </Button>
+        </Segment>
+      </Fragment>
     );
   }
 }

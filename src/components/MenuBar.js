@@ -34,6 +34,7 @@ class MenuBar extends Component {
       newUserStory,
       openFile,
       saveFile,
+      saveFileAs,
       preferences,
       about
     } = this.props;
@@ -73,8 +74,13 @@ class MenuBar extends Component {
                 />
                 <Dropdown.Item
                   icon="save outline"
-                  text="Save as..."
+                  text="Save..."
                   onClick={saveFile}
+                />
+                <Dropdown.Item
+                  icon="save outline"
+                  text="Save as.."
+                  onClick={saveFileAs}
                 />
                 <Dropdown.Divider />
                 <Dropdown.Item

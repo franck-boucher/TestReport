@@ -24,7 +24,8 @@ class App extends Component {
     activeTabIndex: 0,
     preferencesModal: false,
     aboutModal: false,
-    isWorkSaved: true
+    isWorkSaved: true,
+    currentFilePath: ''
   };
   handleFieldChange = (e, { id, value }, callback) => {
     const { userStory } = this.state;
@@ -45,7 +46,7 @@ class App extends Component {
   };
   newUserStory = () => {
     const userStory = { ...EmptyUserStory().toJS() };
-    this.setState({ userStory });
+    this.setState({ userStory, currentFilePath: '' });
   };
   openFile = () => {
     this.setState({ dimmed: true });
@@ -54,7 +55,11 @@ class App extends Component {
       if (filePaths) {
         const fileContent = fs.readFileSync(filePaths[0]).toString();
         const userStory = parseCSV(fileContent);
-        this.setState({ userStory, isWorkSaved: true });
+        this.setState({
+          userStory,
+          isWorkSaved: true,
+          currentFilePath: filePaths[0]
+        });
       } else {
         console.error(
           'Error while trying to select file path from file system'
@@ -63,6 +68,21 @@ class App extends Component {
     });
   };
   saveFile = () => {
+    const { currentFilePath } = this.state;
+    if (!currentFilePath) {
+      this.saveFileAs();
+    } else {
+      const csvString = generateCSV(this.state.userStory);
+      fs.writeFile(currentFilePath, csvString, err => {
+        if (err) {
+          console.error('Error while trying to save file to file system');
+        } else {
+          this.setState({ isWorkSaved: true });
+        }
+      });
+    }
+  };
+  saveFileAs = () => {
     const csvString = generateCSV(this.state.userStory);
     this.setState({ dimmed: true });
     dialog.showSaveDialog(DialogConfig, filePath => {
@@ -72,7 +92,7 @@ class App extends Component {
           if (err) {
             console.error('Error while trying to save file to file system');
           } else {
-            this.setState({ isWorkSaved: true });
+            this.setState({ isWorkSaved: true, currentFilePath: filePath });
           }
         });
       } else {
@@ -112,6 +132,7 @@ class App extends Component {
           newUserStory={this.newUserStory}
           openFile={this.openFile}
           saveFile={this.saveFile}
+          saveFileAs={this.saveFileAs}
           preferences={() => this.openModal('preferencesModal')}
           about={() => this.openModal('aboutModal')}
         />

@@ -25,3 +25,8 @@ body,
   padding-bottom: 0.55em;
   border-bottom: 2px solid rgba(34, 36, 38, 0.15);
 }
+
+/* https://github.com/greena13/react-hotkeys#blue-border-appears-around-children-of-hotkeys */
+div[tabindex='-1']:focus {
+  outline: 0;
+}

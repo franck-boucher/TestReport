@@ -1,36 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { Menu, Header, Dropdown, Confirm } from 'semantic-ui-react';
+import { Menu, Header, Dropdown } from 'semantic-ui-react';
+
+const os = require('os');
 
 class MenuBar extends Component {
-  state = {
-    confirmModalAction: '',
-    isConfirmModalOpen: false
-  };
-  openConfirmModal = action => {
-    this.setState({ isConfirmModalOpen: true, confirmModalAction: action });
-  };
-  closeConfirmModal = () => {
-    this.setState({ isConfirmModalOpen: false, confirmModalAction: '' });
-  };
-  confirm = () => {
-    const { confirmModalAction, isConfirmModalOpen } = this.state;
-    if (confirmModalAction && isConfirmModalOpen) {
-      switch (confirmModalAction) {
-        case 'new':
-          this.props.newUserStory();
-          break;
-        case 'open':
-          this.props.openFile();
-          break;
-        default:
-          break;
-      }
-      this.closeConfirmModal();
-    }
+  cmdOrCtrl = () => {
+    return os.platform === 'win32' ? 'Ctrl' : 'Cmd';
   };
   render() {
     const {
-      isWorkSaved,
       newUserStory,
       openFile,
       saveFile,
@@ -38,48 +16,38 @@ class MenuBar extends Component {
       preferences,
       about
     } = this.props;
-    const { isConfirmModalOpen } = this.state;
+    const cmdOrCtrl = this.cmdOrCtrl();
     return (
       <Fragment>
-        <Confirm
-          open={isConfirmModalOpen}
-          content="You have unsaved work, do you want to proceed anyway ?"
-          confirmButton="Continue"
-          cancelButton="Cancel"
-          onCancel={this.closeConfirmModal}
-          onConfirm={this.confirm}
-        />
         <Menu fixed="top">
           <Header id="app-title" size="medium">
             TestReport
           </Header>
           <Menu.Menu position="right">
             <Dropdown item icon="bars" direction="left">
-              <Dropdown.Menu>
+              <Dropdown.Menu style={{ width: 'max-content' }}>
                 <Dropdown.Item
                   icon="file outline"
                   text="New"
-                  onClick={
-                    isWorkSaved
-                      ? newUserStory
-                      : () => this.openConfirmModal('new')
-                  }
+                  description={`${cmdOrCtrl} + N`}
+                  onClick={newUserStory}
                 />
                 <Dropdown.Item
                   icon="folder open outline"
                   text="Open..."
-                  onClick={
-                    isWorkSaved ? openFile : () => this.openConfirmModal('open')
-                  }
+                  description={`${cmdOrCtrl} + O`}
+                  onClick={openFile}
                 />
                 <Dropdown.Item
                   icon="save outline"
                   text="Save..."
+                  description={`${cmdOrCtrl} + S`}
                   onClick={saveFile}
                 />
                 <Dropdown.Item
                   icon="save outline"
                   text="Save as.."
+                  description={`${cmdOrCtrl} + Shift + S`}
                   onClick={saveFileAs}
                 />
                 <Dropdown.Divider />

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Grid, Tab, Dimmer } from 'semantic-ui-react';
+import { Grid, Tab, Dimmer, Confirm } from 'semantic-ui-react';
+import { HotKeys } from 'react-hotkeys';
 
 import './App.css';
 
@@ -25,7 +26,21 @@ class App extends Component {
     preferencesModal: false,
     aboutModal: false,
     isWorkSaved: true,
-    currentFilePath: ''
+    currentFilePath: '',
+    currentOperation: '',
+    isConfirmModalOpen: false
+  };
+  keyMap = {
+    NEW: ['command+n', 'ctrl+n'],
+    OPEN: ['command+o', 'ctrl+o'],
+    SAVE: ['command+s', 'ctrl+s'],
+    SAVE_AS: ['command+shift+s', 'ctrl+shift+s']
+  };
+  handlers = {
+    NEW: () => this.handleHotkey('NEW'),
+    OPEN: () => this.handleHotkey('OPEN'),
+    SAVE: () => this.handleHotkey('SAVE'),
+    SAVE_AS: () => this.handleHotkey('SAVE_AS')
   };
   handleFieldChange = (e, { id, value }, callback) => {
     const { userStory } = this.state;
@@ -41,6 +56,53 @@ class App extends Component {
   closeModal = modal => {
     this.setState({ [modal]: false });
   };
+  handleHotkey = operation => {
+    const { currentOperation, isWorkSaved } = this.state;
+    if (!currentOperation) {
+      switch (operation) {
+        case 'NEW':
+          if (isWorkSaved) this.newUserStory();
+          else this.openConfirmModal(operation);
+          break;
+        case 'OPEN':
+          if (isWorkSaved) this.openFile();
+          else this.openConfirmModal(operation);
+          break;
+        case 'SAVE':
+          this.saveFile();
+          break;
+        case 'SAVE_AS':
+          this.saveFileAs();
+          break;
+        default:
+          break;
+      }
+    }
+  };
+  openConfirmModal = action => {
+    if (!this.state.currentOperation) {
+      this.setState({ isConfirmModalOpen: true, currentOperation: action });
+    }
+  };
+  closeConfirmModal = () => {
+    this.setState({ isConfirmModalOpen: false, currentOperation: '' });
+  };
+  confirmOperation = () => {
+    const { currentOperation, isConfirmModalOpen } = this.state;
+    if (currentOperation && isConfirmModalOpen) {
+      switch (currentOperation) {
+        case 'NEW':
+          this.newUserStory();
+          break;
+        case 'OPEN':
+          this.openFile();
+          break;
+        default:
+          break;
+      }
+      this.closeConfirmModal();
+    }
+  };
   selectScenario = scenarioUuid => {
     this.setState({ selectedScenario: scenarioUuid, activeTabIndex: 1 });
   };
@@ -49,9 +111,9 @@ class App extends Component {
     this.setState({ userStory, currentFilePath: '' });
   };
   openFile = () => {
-    this.setState({ dimmed: true });
+    this.setState({ dimmed: true, currentOperation: 'OPEN' });
     dialog.showOpenDialog(DialogConfig, filePaths => {
-      this.setState({ dimmed: false });
+      this.setState({ dimmed: false, currentOperation: '' });
       if (filePaths) {
         const fileContent = fs.readFileSync(filePaths[0]).toString();
         const userStory = parseCSV(fileContent);
@@ -84,9 +146,9 @@ class App extends Component {
   };
   saveFileAs = () => {
     const csvString = generateCSV(this.state.userStory);
-    this.setState({ dimmed: true });
+    this.setState({ dimmed: true, currentOperation: 'SAVE_AS' });
     dialog.showSaveDialog(DialogConfig, filePath => {
-      this.setState({ dimmed: false });
+      this.setState({ dimmed: false, currentOperation: '' });
       if (filePath) {
         fs.writeFile(filePath, csvString, err => {
           if (err) {
@@ -103,6 +165,7 @@ class App extends Component {
     });
   };
   render() {
+    const { isConfirmModalOpen, isWorkSaved } = this.state;
     const panes = [
       {
         menuItem: 'User story infos',
@@ -126,42 +189,58 @@ class App extends Component {
       }
     ];
     return (
-      <div style={{ padding: '1em 2em' }}>
-        <MenuBar
-          isWorkSaved={this.state.isWorkSaved}
-          newUserStory={this.newUserStory}
-          openFile={this.openFile}
-          saveFile={this.saveFile}
-          saveFileAs={this.saveFileAs}
-          preferences={() => this.openModal('preferencesModal')}
-          about={() => this.openModal('aboutModal')}
-        />
-        <Preferences
-          isModalOpen={this.state.preferencesModal}
-          handleClose={() => this.closeModal('preferencesModal')}
-        />
-        <About
-          isModalOpen={this.state.aboutModal}
-          handleClose={() => this.closeModal('aboutModal')}
-        />
-        <Dimmer active={this.state.dimmed} page />
-        <Grid>
-          <Grid.Column width={10}>
-            <Tab
-              menu={{ secondary: true, pointing: true }}
-              panes={panes}
-              activeIndex={this.state.activeTabIndex}
-              onTabChange={this.handleTabChange}
-            />
-          </Grid.Column>
-          <Grid.Column width={6}>
-            <TestStatus
-              scenarios={this.state.userStory.scenarios}
-              selectScenario={this.selectScenario}
-            />
-          </Grid.Column>
-        </Grid>
-      </div>
+      <HotKeys keyMap={this.keyMap} handlers={this.handlers}>
+        <div style={{ padding: '1em 2em' }}>
+          <MenuBar
+            isWorkSaved={this.state.isWorkSaved}
+            newUserStory={
+              isWorkSaved
+                ? this.newUserStory
+                : () => this.openConfirmModal('NEW')
+            }
+            openFile={
+              isWorkSaved ? this.openFile : () => this.openConfirmModal('OPEN')
+            }
+            saveFile={this.saveFile}
+            saveFileAs={this.saveFileAs}
+            preferences={() => this.openModal('preferencesModal')}
+            about={() => this.openModal('aboutModal')}
+          />
+          <Preferences
+            isModalOpen={this.state.preferencesModal}
+            handleClose={() => this.closeModal('preferencesModal')}
+          />
+          <About
+            isModalOpen={this.state.aboutModal}
+            handleClose={() => this.closeModal('aboutModal')}
+          />
+          <Confirm
+            open={isConfirmModalOpen}
+            content="You have unsaved work, do you want to proceed anyway ?"
+            confirmButton="Continue"
+            cancelButton="Cancel"
+            onCancel={this.closeConfirmModal}
+            onConfirm={this.confirmOperation}
+          />
+          <Dimmer active={this.state.dimmed} page />
+          <Grid>
+            <Grid.Column width={10}>
+              <Tab
+                menu={{ secondary: true, pointing: true }}
+                panes={panes}
+                activeIndex={this.state.activeTabIndex}
+                onTabChange={this.handleTabChange}
+              />
+            </Grid.Column>
+            <Grid.Column width={6}>
+              <TestStatus
+                scenarios={this.state.userStory.scenarios}
+                selectScenario={this.selectScenario}
+              />
+            </Grid.Column>
+          </Grid>
+        </div>
+      </HotKeys>
     );
   }
 }

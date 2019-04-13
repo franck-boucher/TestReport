@@ -25,7 +25,7 @@ class App extends Component {
     activeTabIndex: 0,
     preferencesModal: false,
     aboutModal: false,
-    isWorkSaved: true,
+    isWorkSaved: '',
     currentFilePath: '',
     currentOperation: '',
     isConfirmModalOpen: false
@@ -45,7 +45,7 @@ class App extends Component {
   handleFieldChange = (e, { id, value }, callback) => {
     const { userStory } = this.state;
     userStory[id] = value;
-    this.setState({ userStory, isWorkSaved: false }, callback);
+    this.setState({ userStory, isWorkSaved: 'NOT_SAVED' }, callback);
   };
   handleTabChange = (e, { activeIndex }) => {
     this.setState({ activeTabIndex: activeIndex });
@@ -61,11 +61,11 @@ class App extends Component {
     if (!currentOperation) {
       switch (operation) {
         case 'NEW':
-          if (isWorkSaved) this.newUserStory();
+          if (isWorkSaved === 'SAVED') this.newUserStory();
           else this.openConfirmModal(operation);
           break;
         case 'OPEN':
-          if (isWorkSaved) this.openFile();
+          if (isWorkSaved === 'SAVED') this.openFile();
           else this.openConfirmModal(operation);
           break;
         case 'SAVE':
@@ -108,7 +108,7 @@ class App extends Component {
   };
   newUserStory = () => {
     const userStory = { ...EmptyUserStory().toJS() };
-    this.setState({ userStory, currentFilePath: '' });
+    this.setState({ userStory, currentFilePath: '', isWorkSaved: '' });
   };
   openFile = () => {
     this.setState({ dimmed: true, currentOperation: 'OPEN' });
@@ -119,7 +119,7 @@ class App extends Component {
         const userStory = parseCSV(fileContent);
         this.setState({
           userStory,
-          isWorkSaved: true,
+          isWorkSaved: 'SAVED',
           currentFilePath: filePaths[0]
         });
       } else {
@@ -139,7 +139,7 @@ class App extends Component {
         if (err) {
           console.error('Error while trying to save file to file system');
         } else {
-          this.setState({ isWorkSaved: true });
+          this.setState({ isWorkSaved: 'SAVED' });
         }
       });
     }
@@ -154,7 +154,7 @@ class App extends Component {
           if (err) {
             console.error('Error while trying to save file to file system');
           } else {
-            this.setState({ isWorkSaved: true, currentFilePath: filePath });
+            this.setState({ isWorkSaved: 'SAVED', currentFilePath: filePath });
           }
         });
       } else {
@@ -165,7 +165,9 @@ class App extends Component {
     });
   };
   render() {
-    const { isConfirmModalOpen, isWorkSaved } = this.state;
+    const { isConfirmModalOpen } = this.state;
+    const isWorkSaved =
+      this.state.isWorkSaved === 'SAVED' || this.state.isWorkSaved === '';
     const panes = [
       {
         menuItem: 'User story infos',

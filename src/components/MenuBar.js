@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Menu, Header, Dropdown } from 'semantic-ui-react';
+import { Menu, Header, Dropdown, Label } from 'semantic-ui-react';
 
 const os = require('os');
 
@@ -14,7 +14,8 @@ class MenuBar extends Component {
       saveFile,
       saveFileAs,
       preferences,
-      about
+      about,
+      isWorkSaved
     } = this.props;
     const cmdOrCtrl = this.cmdOrCtrl();
     return (
@@ -24,6 +25,16 @@ class MenuBar extends Component {
             TestReport
           </Header>
           <Menu.Menu position="right">
+            {isWorkSaved && (
+              <Label
+                basic
+                color={isWorkSaved === 'SAVED' ? 'green' : 'grey'}
+                size="small"
+                style={{ margin: '0.7em 1.1em' }}
+              >
+                {isWorkSaved === 'SAVED' ? 'Saved' : 'Not saved'}
+              </Label>
+            )}
             <Dropdown item icon="bars" direction="left">
               <Dropdown.Menu style={{ width: 'max-content' }}>
                 <Dropdown.Item

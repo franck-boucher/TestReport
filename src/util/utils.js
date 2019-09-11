@@ -27,6 +27,11 @@ export const colorStatus = status => {
   else return 'yellow';
 };
 
+export const colorPassed = percent => {
+  if (percent === 100) return 'green';
+  return 'red';
+};
+
 export const cloneScenario = scenario => {
   const store = new Store();
   const newScenario = { ...scenario };

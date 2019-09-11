@@ -164,10 +164,18 @@ class App extends Component {
       }
     });
   };
+  getPercentPassed = () => {
+    const { scenarios } = this.state.userStory;
+    const totalScenarios = scenarios.length;
+    if (totalScenarios === 0) return 0;
+    const totalPassed = scenarios.filter(el => el.testStatus === 'OK').length;
+    return Math.round((totalPassed / totalScenarios) * 100);
+  };
   render() {
     const { isConfirmModalOpen } = this.state;
     const isWorkSaved =
       this.state.isWorkSaved === 'SAVED' || this.state.isWorkSaved === '';
+    const percentPassed = this.getPercentPassed();
     const panes = [
       {
         menuItem: 'User story infos',
@@ -238,6 +246,7 @@ class App extends Component {
               <TestStatus
                 scenarios={this.state.userStory.scenarios}
                 selectScenario={this.selectScenario}
+                percentPassed={percentPassed}
               />
             </Grid.Column>
           </Grid>

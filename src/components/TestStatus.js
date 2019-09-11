@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import { Segment, Message, Icon, Header } from 'semantic-ui-react';
 
-import { iconStatus, colorStatus } from '../util/utils';
+import { iconStatus, colorStatus, colorPassed } from '../util/utils';
 
-const TestStatus = ({ scenarios, selectScenario }) => {
+const TestStatus = ({ scenarios, selectScenario, percentPassed }) => {
   const scenariosResultTests = scenarios.map(scenario => (
     <Message
       key={scenario.uuid}
@@ -25,6 +25,11 @@ const TestStatus = ({ scenarios, selectScenario }) => {
       <Header id="test-status" as="h3" dividing>
         Test statuses
       </Header>
+      <Segment color={colorPassed(percentPassed)}>
+        <Header as="h4" style={{ textAlign: 'center' }}>
+          {percentPassed}% passed
+        </Header>
+      </Segment>
       <Segment style={{ paddingTop: '1.5em' }}>
         {scenariosResultTests.length > 0 && scenariosResultTests}
         {scenariosResultTests.length === 0 && (

@@ -49,8 +49,6 @@ export const EmptyCSV = List([
   List(['', 'Tools:', '', '', '', '', '', '']),
   List(['', 'General comment:', '', '', '', '', '', '']),
   List(['', 'Asumptions: ', '', '', '', '', '', '']),
-  List(['', 'Start testing date:', '', '', '', '', '', '']),
-  List(['', 'End testing date', '', '', '', '', '', '']),
   List(['', '', '', '', '', '', '', '']),
   List([
     '',

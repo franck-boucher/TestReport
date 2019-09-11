@@ -9,7 +9,7 @@ import {
 } from 'semantic-ui-react';
 
 import TagsInput from './TagsInput';
-import { Environments, DateConfigs } from '../util/constants';
+import { Environments } from '../util/constants';
 
 const EmptyUserStoryPreferences = ({ emptyUserStory, handleFieldChange }) => {
   const {
@@ -19,22 +19,13 @@ const EmptyUserStoryPreferences = ({ emptyUserStory, handleFieldChange }) => {
     author,
     tools,
     comments,
-    asumptions,
-    startTestingDate,
-    endTestingDate
+    asumptions
   } = emptyUserStory;
   const environmentOptions = Environments.map(environment => {
     return {
       key: environment,
       text: environment,
       value: environment
-    };
-  });
-  const dateConfigOptions = DateConfigs.map(dateConfig => {
-    return {
-      key: dateConfig,
-      text: dateConfig,
-      value: dateConfig
     };
   });
   return (
@@ -114,36 +105,6 @@ const EmptyUserStoryPreferences = ({ emptyUserStory, handleFieldChange }) => {
             onChange={handleFieldChange}
           />
         </Form.Field>
-        <Grid columns={2}>
-          <Grid.Row>
-            <Grid.Column>
-              <Form.Field>
-                <label>Start testing date</label>
-                <Dropdown
-                  id="startTestingDate"
-                  fluid
-                  selection
-                  options={dateConfigOptions}
-                  value={startTestingDate}
-                  onChange={handleFieldChange}
-                />
-              </Form.Field>
-            </Grid.Column>
-            <Grid.Column>
-              <Form.Field>
-                <label>End testing date</label>
-                <Dropdown
-                  id="endTestingDate"
-                  fluid
-                  selection
-                  options={dateConfigOptions}
-                  value={endTestingDate}
-                  onChange={handleFieldChange}
-                />
-              </Form.Field>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
       </Form>
     </Segment>
   );

@@ -8,7 +8,6 @@ import {
   Dropdown
 } from 'semantic-ui-react';
 
-import Datepicker from './Datepicker';
 import TagsInput from './TagsInput';
 import { Environments } from '../util/constants';
 
@@ -20,9 +19,7 @@ const UserStoryInfos = ({ userStoryInfos, handleFieldChange }) => {
     author,
     tools,
     comments,
-    asumptions,
-    startTestingDate,
-    endTestingDate
+    asumptions
   } = userStoryInfos;
   const environmentOptions = Environments.map(environment => {
     return {
@@ -108,30 +105,6 @@ const UserStoryInfos = ({ userStoryInfos, handleFieldChange }) => {
             onChange={handleFieldChange}
           />
         </Form.Field>
-        <Grid columns={2}>
-          <Grid.Row>
-            <Grid.Column>
-              <Form.Field>
-                <label>Start testing date</label>
-                <Datepicker
-                  id="startTestingDate"
-                  value={startTestingDate}
-                  onChange={handleFieldChange}
-                />
-              </Form.Field>
-            </Grid.Column>
-            <Grid.Column>
-              <Form.Field>
-                <label>End testing date</label>
-                <Datepicker
-                  id="endTestingDate"
-                  value={endTestingDate}
-                  onChange={handleFieldChange}
-                />
-              </Form.Field>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
       </Form>
     </Segment>
   );

@@ -6,8 +6,6 @@ export const Environments = ['DEV', 'RCT', 'PROD'];
 
 export const TestStatuses = ['PENDING', 'OK', 'KO'];
 
-export const DateConfigs = ['YESTERDAY', 'TODAY', 'TOMORROW'];
-
 export const LanguageOptions = [
   { key: 'en', value: 'en', text: 'English' },
   { key: 'fr', value: 'fr', text: 'Français' }
@@ -22,8 +20,6 @@ export const EmptyScenario = () => {
 export const EmptyUserStory = () => {
   const store = new Store();
   const emptyUserStory = store.get('emptyUserStory');
-  const startTestingDate = dateConfig(emptyUserStory.startTestingDate);
-  const endTestingDate = dateConfig(emptyUserStory.endTestingDate);
   return Map({
     userStory: emptyUserStory.userStory,
     environment: emptyUserStory.environment,
@@ -32,23 +28,8 @@ export const EmptyUserStory = () => {
     tools: List(emptyUserStory.tools),
     comments: emptyUserStory.comments,
     asumptions: emptyUserStory.asumptions,
-    startTestingDate,
-    endTestingDate,
     scenarios: List(emptyUserStory.scenarios)
   });
-};
-
-export const dateConfig = config => {
-  switch (config) {
-    case 'TODAY':
-      return new Date();
-    case 'TOMORROW':
-      return new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-    case 'YESTERDAY':
-      return new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-    default:
-      return new Date();
-  }
 };
 
 export const DialogConfig = {

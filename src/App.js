@@ -12,7 +12,7 @@ import MenuBar from './components/MenuBar';
 import Preferences from './components/Preferences';
 import About from './components/About';
 import { EmptyUserStory, DialogConfig } from './util/constants';
-import { parseCSV, generateCSV } from './util/utils';
+import { parseFile, generateJSON, isFileJson } from './util/utils';
 
 const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
@@ -115,13 +115,13 @@ class App extends Component {
     dialog.showOpenDialog(DialogConfig, filePaths => {
       this.setState({ dimmed: false, currentOperation: '' });
       if (filePaths) {
-        const fileContent = fs.readFileSync(filePaths[0]).toString();
-        const userStory = parseCSV(fileContent);
-        this.setState({
-          userStory,
-          isWorkSaved: 'SAVED',
-          currentFilePath: filePaths[0]
-        });
+        const filePath = filePaths[0];
+        const fileContent = fs.readFileSync(filePath).toString();
+        const userStory = parseFile(filePath, fileContent);
+        this.setState({ userStory });
+        if (isFileJson(filePath)) {
+          this.setState({ currentFilePath: filePath, isWorkSaved: 'SAVED' });
+        }
       } else {
         console.error(
           'Error while trying to select file path from file system'
@@ -134,8 +134,7 @@ class App extends Component {
     if (!currentFilePath) {
       this.saveFileAs();
     } else {
-      const csvString = generateCSV(this.state.userStory);
-      fs.writeFile(currentFilePath, csvString, err => {
+      fs.writeFile(currentFilePath, generateJSON(this.state.userStory), err => {
         if (err) {
           console.error('Error while trying to save file to file system');
         } else {
@@ -145,12 +144,11 @@ class App extends Component {
     }
   };
   saveFileAs = () => {
-    const csvString = generateCSV(this.state.userStory);
     this.setState({ dimmed: true, currentOperation: 'SAVE_AS' });
     dialog.showSaveDialog(DialogConfig, filePath => {
       this.setState({ dimmed: false, currentOperation: '' });
       if (filePath) {
-        fs.writeFile(filePath, csvString, err => {
+        fs.writeFile(filePath, generateJSON(this.state.userStory), err => {
           if (err) {
             console.error('Error while trying to save file to file system');
           } else {

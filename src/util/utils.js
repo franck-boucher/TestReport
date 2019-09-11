@@ -94,3 +94,29 @@ export const generateCSV = userStory => {
   });
   return Papa.unparse(data, { delimiter: ';' });
 };
+
+export const generateJSON = userStory => {
+  return JSON.stringify(userStory, null, 4);
+};
+
+export const parseJSON = jsonString => {
+  return JSON.parse(jsonString);
+};
+
+export const parseFile = (filePath, fileContent) => {
+  const ext = filePath.split('.').pop();
+  switch (ext) {
+    case 'csv':
+    case 'CSV':
+      return parseCSV(fileContent);
+    case 'json':
+    case 'JSON':
+    default:
+      return parseJSON(fileContent);
+  }
+};
+
+export const isFileJson = fileName => {
+  const ext = fileName.split('.').pop();
+  return ext === 'json' || ext === 'JSON';
+};

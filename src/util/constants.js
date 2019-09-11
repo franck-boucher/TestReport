@@ -35,6 +35,7 @@ export const EmptyUserStory = () => {
 export const DialogConfig = {
   properties: ['openFile'],
   filters: [
+    { name: 'Json Files', extensions: ['json', 'JSON'] },
     { name: 'CSV Files', extensions: ['csv', 'CSV'] },
     { name: 'All Files', extensions: ['*'] }
   ]

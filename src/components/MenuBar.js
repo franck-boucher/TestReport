@@ -13,6 +13,7 @@ class MenuBar extends Component {
       openFile,
       saveFile,
       saveFileAs,
+      savePdfAs,
       preferences,
       about,
       isWorkSaved
@@ -60,6 +61,11 @@ class MenuBar extends Component {
                   text="Save as.."
                   description={`${cmdOrCtrl} + Shift + S`}
                   onClick={saveFileAs}
+                />
+                <Dropdown.Item
+                  icon="save outline"
+                  text="Save as PDF.."
+                  onClick={savePdfAs}
                 />
                 <Dropdown.Divider />
                 <Dropdown.Item

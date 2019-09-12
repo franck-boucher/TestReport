@@ -120,3 +120,134 @@ export const isFileJson = fileName => {
   const ext = fileName.split('.').pop();
   return ext === 'json' || ext === 'JSON';
 };
+
+export const getPercentPassed = userStory => {
+  const { scenarios } = userStory;
+  const totalScenarios = scenarios.length;
+  if (totalScenarios === 0) return 0;
+  const totalPassed = scenarios.filter(el => el.testStatus === 'OK').length;
+  return Math.round((totalPassed / totalScenarios) * 100);
+};
+
+export const getPdfColorForPercent = percent => {
+  if (percent >= 100) return '#3CB371';
+  else if (percent <= 0) return '#ed2c2c';
+  else return '#ffae1a';
+};
+
+export const getPdfColorScenario = status => {
+  if (status === 'OK') return '#9bddb9';
+  else if (status === 'KO') return '#f58686';
+  else return '#ffd17c';
+};
+
+export const generatePdfScenarioElement = scenario => {
+  return {
+    style: 'margins',
+    table: {
+      widths: ['*'],
+      body: [
+        [
+          {
+            fillColor: getPdfColorScenario(scenario.testStatus),
+            border: [false],
+            text: scenario.title
+          }
+        ]
+      ]
+    }
+  };
+};
+
+export const generatePdf = userStory => {
+  const percentPassed = getPercentPassed(userStory);
+  const pdf = {
+    pageMargins: [0, 60],
+    content: [
+      {
+        text: userStory.userStory,
+        style: ['header', 'center']
+      },
+      {
+        text: 'Test report',
+        style: 'center'
+      },
+      '\n\n\n',
+      {
+        table: {
+          widths: ['*'],
+          body: [
+            [
+              {
+                style: ['percent', 'margins'],
+                fillColor: getPdfColorForPercent(percentPassed),
+                border: [false],
+                text: `${percentPassed}%`
+              }
+            ]
+          ]
+        }
+      },
+      '\n\n',
+      {
+        style: 'margins',
+        text: [
+          { text: 'Type: ', bold: true },
+          userStory.type,
+          '\n',
+          { text: 'Author: ', bold: true },
+          userStory.author,
+          '\n',
+          { text: 'Env: ', bold: true },
+          userStory.environment,
+          '\n',
+          { text: 'Tools: ', bold: true },
+          userStory.tools.join(', '),
+          ...(userStory.comments && [
+            '\n',
+            '\n',
+            { text: 'General comments: ', bold: true },
+            '\n',
+            userStory.comments
+          ]),
+          ...(userStory.asumptions && [
+            '\n',
+            '\n',
+            { text: 'Assumptions: ', bold: true },
+            '\n',
+            userStory.asumptions
+          ])
+        ]
+      },
+      '\n\n',
+      {
+        canvas: [
+          { type: 'line', x1: 40, y1: 5, x2: 595 - 40, y2: 5, lineWidth: 1 }
+        ]
+      },
+      '\n\n'
+    ],
+    styles: {
+      header: {
+        fontSize: 24,
+        bold: true
+      },
+      center: {
+        alignment: 'center'
+      },
+      percent: {
+        fontSize: 38,
+        italics: true,
+        alignment: 'right'
+      },
+      margins: {
+        margin: [40, 0]
+      }
+    }
+  };
+  userStory.scenarios.forEach(el => {
+    pdf.content.push(generatePdfScenarioElement(el));
+    pdf.content.push('\n');
+  });
+  return pdf;
+};

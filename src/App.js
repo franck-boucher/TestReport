@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Grid, Tab, Dimmer, Confirm } from 'semantic-ui-react';
 import { HotKeys } from 'react-hotkeys';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import './App.css';
 
@@ -11,11 +13,22 @@ import TestScenarios from './components/TestScenarios';
 import MenuBar from './components/MenuBar';
 import Preferences from './components/Preferences';
 import About from './components/About';
-import { EmptyUserStory, DialogConfig } from './util/constants';
-import { parseFile, generateJSON, isFileJson } from './util/utils';
+import {
+  parseFile,
+  generateJSON,
+  isFileJson,
+  generatePdf,
+  getPercentPassed
+} from './util/utils';
+import {
+  EmptyUserStory,
+  DialogConfig,
+  DialogPdfConfig
+} from './util/constants';
 
 const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 class App extends Component {
   state = {
@@ -162,18 +175,28 @@ class App extends Component {
       }
     });
   };
-  getPercentPassed = () => {
-    const { scenarios } = this.state.userStory;
-    const totalScenarios = scenarios.length;
-    if (totalScenarios === 0) return 0;
-    const totalPassed = scenarios.filter(el => el.testStatus === 'OK').length;
-    return Math.round((totalPassed / totalScenarios) * 100);
+  savePdfAs = () => {
+    this.setState({ dimmed: true, currentOperation: 'SAVE_PDF_AS' });
+    dialog.showSaveDialog(DialogPdfConfig, filePath => {
+      this.setState({ dimmed: false, currentOperation: '' });
+      if (filePath) {
+        const pdf = generatePdf(this.state.userStory);
+        const pdfDocGenerator = pdfMake.createPdf(pdf);
+        let pdfDoc = pdfDocGenerator.getStream();
+        pdfDoc.pipe(fs.createWriteStream(filePath));
+        pdfDoc.end();
+      } else {
+        console.error(
+          'Error while trying to select file path from file system'
+        );
+      }
+    });
   };
   render() {
     const { isConfirmModalOpen } = this.state;
     const isWorkSaved =
       this.state.isWorkSaved === 'SAVED' || this.state.isWorkSaved === '';
-    const percentPassed = this.getPercentPassed();
+    const percentPassed = getPercentPassed(this.state.userStory);
     const panes = [
       {
         menuItem: 'User story infos',
@@ -211,6 +234,7 @@ class App extends Component {
             }
             saveFile={this.saveFile}
             saveFileAs={this.saveFileAs}
+            savePdfAs={this.savePdfAs}
             preferences={() => this.openModal('preferencesModal')}
             about={() => this.openModal('aboutModal')}
           />

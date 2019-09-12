@@ -41,6 +41,11 @@ export const DialogConfig = {
   ]
 };
 
+export const DialogPdfConfig = {
+  properties: ['openFile'],
+  filters: [{ name: 'PDF Files', extensions: ['pdf', 'PDF'] }]
+};
+
 export const EmptyCSV = List([
   List(['', '', '', '', '', '', '', '']),
   List(['', 'User story:', '', '', '', '', '', '']),

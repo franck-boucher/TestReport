@@ -67,6 +67,71 @@ class TestScenarios extends Component {
       value: newScenarios
     });
   };
+  renderScenario = (scenario, index) => (
+    <Draggable key={scenario.uuid} draggableId={scenario.uuid} index={index}>
+      {(provided, snapshot) => ( // TODO: COPY FROM THE EXEMPLE https://github.com/atlassian/react-beautiful-dnd/blob/master/stories/src/vertical-nested/quote-list.jsx
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          style={{
+            marginBottom: '1em',
+            ...provided.draggableProps.style
+          }}
+        >
+          <AccordionSegment
+            isActive={this.props.selectedScenario === scenario.uuid}
+            scenario={scenario}
+            handleClick={this.setActive}
+            handleClone={this.cloneScenario}
+            handleDelete={this.deleteScenario}
+          > 
+            <Scenario
+              scenario={scenario}
+              updateScenario={this.updateScenario}
+            />
+          </AccordionSegment>
+        </div>
+      )}
+    </Draggable>
+  );
+  renderList = scenarios => {
+    return scenarios.map((scenario, index) => (
+      <Draggable key={scenario.uuid} draggableId={scenario.uuid} index={index}>
+        {provided => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={{
+              marginBottom: '1em',
+              ...provided.draggableProps.style
+            }}
+          >
+            {scenario.type === 'GROUP' ? (
+              <Segment color="black">
+                <p> TEST </p>
+                {this.renderList(scenario.scenarios)}
+              </Segment>
+            ) : (
+              <AccordionSegment
+                isActive={this.props.selectedScenario === scenario.uuid}
+                scenario={scenario}
+                handleClick={this.setActive}
+                handleClone={this.cloneScenario}
+                handleDelete={this.deleteScenario}
+              >
+                <Scenario
+                  scenario={scenario}
+                  updateScenario={this.updateScenario}
+                />
+              </AccordionSegment>
+            )}
+          </div>
+        )}
+      </Draggable>
+    ));
+  };
   render() {
     const { scenarios } = this.props.userStoryInfos;
     return (
@@ -81,40 +146,7 @@ class TestScenarios extends Component {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
-                    {scenarios.map((scenario, index) => (
-                      <Draggable
-                        key={scenario.uuid}
-                        draggableId={scenario.uuid}
-                        index={index}
-                      >
-                        {provided => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                              marginBottom: '1em',
-                              ...provided.draggableProps.style
-                            }}
-                          >
-                            <AccordionSegment
-                              isActive={
-                                this.props.selectedScenario === scenario.uuid
-                              }
-                              scenario={scenario}
-                              handleClick={this.setActive}
-                              handleClone={this.cloneScenario}
-                              handleDelete={this.deleteScenario}
-                            >
-                              <Scenario
-                                scenario={scenario}
-                                updateScenario={this.updateScenario}
-                              />
-                            </AccordionSegment>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
+                    {this.renderList(scenarios)}
                     {provided.placeholder}
                   </div>
                 )}

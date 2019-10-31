@@ -29,8 +29,6 @@ if (store.size === 0) {
       tools: ['Postman'],
       comments: '',
       asumptions: '',
-      startTestingDate: 'TODAY',
-      endTestingDate: 'TODAY',
       scenarios: []
     },
     emptyScenario: {
@@ -39,6 +37,7 @@ if (store.size === 0) {
       description: '',
       urlParameters: '',
       headers: '',
+      currentResult: '',
       expectedResult: '',
       defects: '',
       comments: ''

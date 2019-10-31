@@ -17,6 +17,7 @@ const EmptyScenarioPreferences = ({ emptyScenario, handleFieldChange }) => {
     description,
     urlParameters,
     headers,
+    currentResult,
     expectedResult,
     defects,
     comments
@@ -77,6 +78,14 @@ const EmptyScenarioPreferences = ({ emptyScenario, handleFieldChange }) => {
         <Form.Field>
           <label>Headers</label>
           <TextArea id="headers" value={headers} onChange={handleFieldChange} />
+        </Form.Field>
+        <Form.Field>
+          <label>Current result</label>
+          <TextArea
+            id="currentResult"
+            value={currentResult}
+            onChange={handleFieldChange}
+          />
         </Form.Field>
         <Form.Field>
           <label>Expected result</label>

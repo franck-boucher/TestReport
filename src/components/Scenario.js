@@ -70,12 +70,28 @@ const Scenario = ({ scenario, updateScenario }) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Expected result</label>
-        <TextArea
-          id="expectedResult"
-          value={scenario.expectedResult}
-          onChange={handleFieldChange}
-        />
+        <ExpendableLabel
+          label="Current result"
+          defaultExpended={!!scenario.currentResult}
+        >
+          <TextArea
+            id="currentResult"
+            value={scenario.currentResult}
+            onChange={handleFieldChange}
+          />
+        </ExpendableLabel>
+      </Form.Field>
+      <Form.Field>
+        <ExpendableLabel
+          label="Expected result"
+          defaultExpended={!!scenario.expectedResult}
+        >
+          <TextArea
+            id="expectedResult"
+            value={scenario.expectedResult}
+            onChange={handleFieldChange}
+          />
+        </ExpendableLabel>
       </Form.Field>
       <Form.Field>
         <ExpendableLabel label="Defects" defaultExpended={!!scenario.defects}>

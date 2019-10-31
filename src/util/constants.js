@@ -47,15 +47,15 @@ export const DialogPdfConfig = {
 };
 
 export const EmptyCSV = List([
-  List(['', '', '', '', '', '', '', '']),
-  List(['', 'User story:', '', '', '', '', '', '']),
-  List(['', 'Environment:', '', '', '', '', '', '']),
-  List(['', 'Type:', '', '', '', '', '', '']),
-  List(['', 'Author:', '', '', '', '', '', '']),
-  List(['', 'Tools:', '', '', '', '', '', '']),
-  List(['', 'General comment:', '', '', '', '', '', '']),
-  List(['', 'Asumptions: ', '', '', '', '', '', '']),
-  List(['', '', '', '', '', '', '', '']),
+  List(['', '', '', '', '', '', '', '', '']),
+  List(['', 'User story:', '', '', '', '', '', '', '']),
+  List(['', 'Environment:', '', '', '', '', '', '', '']),
+  List(['', 'Type:', '', '', '', '', '', '', '']),
+  List(['', 'Author:', '', '', '', '', '', '', '']),
+  List(['', 'Tools:', '', '', '', '', '', '', '']),
+  List(['', 'General comment:', '', '', '', '', '', '', '']),
+  List(['', 'Asumptions: ', '', '', '', '', '', '', '']),
+  List(['', '', '', '', '', '', '', '', '']),
   List([
     '',
     'Test status',
@@ -63,6 +63,7 @@ export const EmptyCSV = List([
     'Scenario description',
     'URL parameters',
     'Headers',
+    'Current result',
     'Expected result',
     'Defects',
     'Comments'

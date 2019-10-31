@@ -51,9 +51,10 @@ export const parseCSV = csvString => {
       description: data[i][3],
       urlParameters: data[i][4],
       headers: data[i][5],
-      expectedResult: data[i][6],
-      defects: data[i][7],
-      comments: data[i][8]
+      currentResult: data[i][6],
+      expectedResult: data[i][7],
+      defects: data[i][8],
+      comments: data[i][9]
     });
     i++;
   }
@@ -87,6 +88,7 @@ export const generateCSV = userStory => {
       scenario.description,
       scenario.urlParameters,
       scenario.headers,
+      scenario.currentResult,
       scenario.expectedResult,
       scenario.defects,
       scenario.comments

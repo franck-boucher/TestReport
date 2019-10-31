@@ -1,7 +1,7 @@
 {
   "name": "test-report",
   "description": "Small app that generates test reports of newly developed features",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "private": true,
   "author": {
     "name": "Franck Boucher",

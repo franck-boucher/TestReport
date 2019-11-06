@@ -28,7 +28,7 @@ yarn electron-build
 
 ## TODO
 
-- Keep track of currently saved file, not asking of new path to save it
-- Shortcuts (new, open, save)
+- ~~Keep track of currently saved file, not asking of new path to save it~~
+- ~~Shortcuts (new, open, save)~~
 - Tabs
 - Open file from / register to related issues on issue tracking apps (Jira, Redmine, ...)

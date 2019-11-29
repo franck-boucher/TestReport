@@ -130,10 +130,12 @@ class App extends Component {
       if (filePaths) {
         const filePath = filePaths[0];
         const fileContent = fs.readFileSync(filePath).toString();
-        const userStory = parseFile(filePath, fileContent);
+        const userStory = parseFile(fileContent);
         this.setState({ userStory });
         if (isFileJson(filePath)) {
           this.setState({ currentFilePath: filePath, isWorkSaved: 'SAVED' });
+        } else {
+          // TODO : display an error
         }
       } else {
         console.error(

@@ -36,7 +36,6 @@ export const DialogConfig = {
   properties: ['openFile'],
   filters: [
     { name: 'Json Files', extensions: ['json', 'JSON'] },
-    { name: 'CSV Files', extensions: ['csv', 'CSV'] },
     { name: 'All Files', extensions: ['*'] }
   ]
 };
@@ -45,27 +44,3 @@ export const DialogPdfConfig = {
   properties: ['openFile'],
   filters: [{ name: 'PDF Files', extensions: ['pdf', 'PDF'] }]
 };
-
-export const EmptyCSV = List([
-  List(['', '', '', '', '', '', '', '', '']),
-  List(['', 'User story:', '', '', '', '', '', '', '']),
-  List(['', 'Environment:', '', '', '', '', '', '', '']),
-  List(['', 'Type:', '', '', '', '', '', '', '']),
-  List(['', 'Author:', '', '', '', '', '', '', '']),
-  List(['', 'Tools:', '', '', '', '', '', '', '']),
-  List(['', 'General comment:', '', '', '', '', '', '', '']),
-  List(['', 'Asumptions: ', '', '', '', '', '', '', '']),
-  List(['', '', '', '', '', '', '', '', '']),
-  List([
-    '',
-    'Test status',
-    'Scenario title',
-    'Scenario description',
-    'URL parameters',
-    'Headers',
-    'Current result',
-    'Expected result',
-    'Defects',
-    'Comments'
-  ])
-]);

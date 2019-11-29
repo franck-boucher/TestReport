@@ -11,7 +11,6 @@
   "dependencies": {
     "electron-store": "^2.0.0",
     "immutable": "^4.0.0-rc.12",
-    "papaparse": "^4.6.3",
     "pdfmake": "^0.1.59",
     "react": "^16.8.2",
     "react-beautiful-dnd": "^10.1.1",
@@ -66,7 +65,7 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "dev": "nf start -p 3000",
-    "electron-build": "yarn build && electron-builder",
+    "electron-build": "npm run build && electron-builder -w",
     "release": "yarn build && electron-builder --publish=always",
     "pack": "yarn build && yarn electron-build"
   },

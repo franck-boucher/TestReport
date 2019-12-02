@@ -32,14 +32,14 @@ const UserStoryInfos = ({ userStoryInfos, handleFieldChange }) => {
     <Segment>
       <Form>
         <Form.Field>
-          <label>User story</label>
+          <label>User story ID</label>
           <Input
             id="userStory"
             icon="linkify"
             iconPosition="left"
             value={userStory}
             onChange={handleFieldChange}
-            placeholder="http://..."
+            placeholder="ID-XXXX"
           />
         </Form.Field>
         <Grid columns={2}>

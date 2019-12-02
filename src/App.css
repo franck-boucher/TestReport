@@ -3,10 +3,21 @@ body,
 #preferences.ui.modal > .content {
   background-color: #ecf0f1;
 }
+
+div#root, div#tabs {
+  height: 100%;
+}
+
 #app-title {
   margin-bottom: 0;
   align-self: center;
   padding-left: 1em;
+}
+
+/* hack to hav a tab panel fill remaining space 
+   TODO: fix later with flex or smthg */
+.ui.bottom.attached.segment.tab {
+  min-height: calc(100% - 41px); 
 }
 
 .ui.form .field,

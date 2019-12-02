@@ -1,4 +1,11 @@
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { DialogConfig, DialogPdfConfig } from './constants'
+
 const Store = window.require('electron-store');
+const { dialog } = window.require('electron').remote;
+const fs = window.require('fs');
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const generateUuid = () => {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -39,12 +46,8 @@ export const generateJSON = userStory => {
   return JSON.stringify(userStory, null, 4);
 };
 
-export const parseJSON = jsonString => {
-  return JSON.parse(jsonString);
-};
-
 export const parseFile = fileContent => {
-  return parseJSON(fileContent);
+  return JSON.parse(fileContent);
 };
 
 export const isFileJson = fileName => {
@@ -70,6 +73,51 @@ export const getPdfColorScenario = status => {
   if (status === 'OK') return '#9bddb9';
   else if (status === 'KO') return '#f58686';
   else return '#ffd17c';
+};
+
+export const openDialog = (onSuccess, callback) => {
+  dialog.showOpenDialog(DialogConfig, filePaths => {
+    callback();
+    if (filePaths) {
+      const filePath = filePaths[0];
+      const fileContent = fs.readFileSync(filePath).toString();
+      onSuccess(fileContent);
+    } else {
+      console.error(
+        'Error while trying to select file path from file system'
+      );
+    }
+  });
+}
+
+export const saveAsDialog = (userStory, callback) => {
+  dialog.showSaveDialog(DialogConfig, filePath => {
+    callback();
+    if (filePath) {
+      fs.writeFile(filePath, generateJSON(userStory.content), () => { });
+    } else {
+      console.error(
+        'Error while trying to select file path from file system'
+      );
+    }
+  });
+};
+
+export const savePdfAsDialog = (userStory, callback) => {
+  dialog.showSaveDialog(DialogPdfConfig, filePath => {
+    callback();
+    if (filePath) {
+      const pdf = generatePdf(userStory.content);
+      const pdfDocGenerator = pdfMake.createPdf(pdf);
+      let pdfDoc = pdfDocGenerator.getStream();
+      pdfDoc.pipe(fs.createWriteStream(filePath));
+      pdfDoc.end();
+    } else {
+      console.error(
+        'Error while trying to select file path from file system'
+      );
+    }
+  });
 };
 
 export const generatePdfScenarioElement = scenario => {

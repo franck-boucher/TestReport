@@ -1,4 +1,5 @@
 import { Map, List } from 'immutable';
+import { generateUuid } from './utils'
 
 const Store = window.require('electron-store');
 
@@ -21,14 +22,23 @@ export const EmptyUserStory = () => {
   const store = new Store();
   const emptyUserStory = store.get('emptyUserStory');
   return Map({
-    userStory: emptyUserStory.userStory,
-    environment: emptyUserStory.environment,
-    type: emptyUserStory.type,
-    author: emptyUserStory.author,
-    tools: List(emptyUserStory.tools),
-    comments: emptyUserStory.comments,
-    asumptions: emptyUserStory.asumptions,
-    scenarios: List(emptyUserStory.scenarios)
+    content: {
+      userStory: emptyUserStory.userStory,
+      environment: emptyUserStory.environment,
+      type: emptyUserStory.type,
+      author: emptyUserStory.author,
+      tools: List(emptyUserStory.tools),
+      comments: emptyUserStory.comments,
+      asumptions: emptyUserStory.asumptions,
+      scenarios: List(emptyUserStory.scenarios)
+    },
+    metadata: {
+      uuid: generateUuid(),
+      isRemote: false,
+      remote: '',
+      selectedScenario: '',
+      activeTabIndex: 0
+    }
   });
 };
 

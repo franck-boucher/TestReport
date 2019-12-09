@@ -34,8 +34,10 @@ export const EmptyUserStory = () => {
     },
     metadata: {
       uuid: generateUuid(),
+      summary: '',
       isRemote: false,
       remote: '',
+      reportAttachmentId: '',
       selectedScenario: '',
       activeTabIndex: 0
     }

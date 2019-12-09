@@ -11,7 +11,7 @@ import {
 import TagsInput from './TagsInput';
 import { Environments } from '../util/constants';
 
-const UserStoryInfos = ({ userStoryInfos, handleFieldChange }) => {
+const UserStoryInfos = ({ isRemote, userStoryInfos, handleFieldChange }) => {
   const {
     userStory,
     environment,
@@ -31,17 +31,19 @@ const UserStoryInfos = ({ userStoryInfos, handleFieldChange }) => {
   return (
     <Segment>
       <Form>
-        <Form.Field>
-          <label>User story ID</label>
-          <Input
-            id="userStory"
-            icon="linkify"
-            iconPosition="left"
-            value={userStory}
-            onChange={handleFieldChange}
-            placeholder="ID-XXXX"
-          />
-        </Form.Field>
+        {!isRemote && (
+          <Form.Field>
+            <label>User story ID</label>
+            <Input
+              id="userStory"
+              icon="linkify"
+              iconPosition="left"
+              value={userStory}
+              onChange={handleFieldChange}
+              placeholder="ID-XXXX"
+            />
+          </Form.Field>
+        )}
         <Grid columns={2}>
           <Grid.Row>
             <Grid.Column>

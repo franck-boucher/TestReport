@@ -55,6 +55,30 @@ export const isFileJson = fileName => {
   return ext === 'json' || ext === 'JSON';
 };
 
+export const buildAuthToken = (username, password) => {
+  return btoa(`${username}:${password}`)
+}
+
+export const buildConfig = ({ url, username, password }) => {
+  return {
+    url,
+    authorizationToken: buildAuthToken(username, password)
+  }
+}
+
+export const updateRemoteConfig = ({ url, authorizationToken }) => {
+  const store = new Store();
+  const issueTrackingApp = store.get('issueTrackingApp');
+  issueTrackingApp.jira.url = url;
+  issueTrackingApp.jira.authorizationToken = authorizationToken;
+  store.set('issueTrackingApp', issueTrackingApp);
+}
+
+export const getRemoteConfig = () => {
+  const store = new Store();
+  return store.get('issueTrackingApp').jira;
+}
+
 export const getPercentPassed = userStory => {
   const { scenarios } = userStory;
   const totalScenarios = scenarios.length;

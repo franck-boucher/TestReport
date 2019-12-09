@@ -8,6 +8,7 @@ import UserStory from './components/UserStory'
 import NewTabPane from './components/NewTabPane'
 import { openDialog, parseFile } from './util/utils';
 import { EmptyUserStory } from './util/constants';
+import { getUserstoryAttachment } from './components/jira/jiraFunctions'
 
 class App extends Component {
 
@@ -68,6 +69,34 @@ class App extends Component {
     return panes;
   }
 
+  createReport = (userStoryId, userStorySummary) => {
+    const userStory = { ...EmptyUserStory().toJS() };
+    userStory.content.userStory = userStoryId;
+    userStory.metadata.summary = userStorySummary;
+    userStory.metadata.isRemote = true;
+    userStory.metadata.remote = 'jira';
+
+    const { userStories } = this.state;
+    userStories.push(userStory);
+    this.setState({ userStories });
+  }
+
+  openReport = (userStorySummary, report) => {
+    getUserstoryAttachment(report.content)
+      .then(json => {
+        const userStory = { ...EmptyUserStory().toJS() };
+        userStory.content = json;
+        userStory.metadata.summary = userStorySummary;
+        userStory.metadata.isRemote = true;
+        userStory.metadata.remote = 'jira';
+        userStory.metadata.reportAttachmentId = report.id;
+
+        const { userStories } = this.state;
+        userStories.push(userStory);
+        this.setState({ userStories });
+      })
+  }
+
   render() {
     const panes = this.buildPanes();
     return (
@@ -76,7 +105,11 @@ class App extends Component {
         {panes.length ?
           <Tab id="tabs" panes={panes} />
           :
-          <NewTabPane onClickNew={this.newUserStory} onClickOpen={this.openFile} />
+          <NewTabPane
+            createReport={this.createReport}
+            openReport={this.openReport}
+            onClickNew={this.newUserStory}
+            onClickOpen={this.openFile} />
         }
       </Fragment>
     );

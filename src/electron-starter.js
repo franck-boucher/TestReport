@@ -74,6 +74,21 @@ function createWindow() {
     });
   mainWindow.loadURL(startUrl);
 
+  // Hack to prevent 500 NPE uploading an attachment on JIRA
+  electron.session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    if (details.requestHeaders['Custom-Headers-Electron']) {
+      delete details.requestHeaders['Origin'];
+      delete details.requestHeaders['Connection'];
+      delete details.requestHeaders['Content-Length'];
+      delete details.requestHeaders['Accept-Language'];
+      delete details.requestHeaders['Accept-Encoding'];
+      delete details.requestHeaders['Accept'];
+      delete details.requestHeaders['User-Agent'];
+      delete details.requestHeaders['Custom-Headers-Electron'];
+    }
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
+
   // Open the DevTools.
   //  mainWindow.webContents.openDevTools();
 

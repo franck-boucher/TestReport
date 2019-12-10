@@ -38,6 +38,7 @@ export const EmptyUserStory = () => {
       isRemote: false,
       remote: '',
       reportAttachmentId: '',
+      reportPdfAttachmentId: '',
       selectedScenario: '',
       activeTabIndex: 0
     }

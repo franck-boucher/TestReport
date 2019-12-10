@@ -1,4 +1,8 @@
-import { getRemoteConfig, buildConfig } from '../../util/utils'
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { getRemoteConfig, buildConfig, generatePdf } from '../../util/utils'
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const connectToJira = (url, username, password) => {
   const config = buildConfig({ url, username, password });
@@ -41,18 +45,40 @@ export const checkStatus = response => {
 export const uploadUserstory = async (userstory) => {
   const userStoryId = userstory.content.userStory;
 
+  let responseAttachments = null;
+  // Delete existing report
   if (userstory.metadata.reportAttachmentId) {
-    await deleteAttachment(userstory.metadata.reportAttachmentId)
+    await deleteAttachment(userstory.metadata.reportAttachmentId);
   } else {
-    const response = await getUserstoryAttachments(userStoryId);
-    const reportAttachment = findReport(response);
+    responseAttachments = await getUserstoryAttachments(userStoryId);
+    const reportAttachment = findReport(responseAttachments, 'json');
     if (reportAttachment) {
       await deleteAttachment(reportAttachment.id);
     }
   }
 
-  const newAttachments = await postNewAttachmentReport(userstory);
-  return newAttachments && newAttachments.length ? newAttachments[0] : null;
+  // Delete existing PDF report
+  if (userstory.metadata.reportPdfAttachmentId) {
+    await deleteAttachment(userstory.metadata.reportPdfAttachmentId);
+  } else {
+    if (!responseAttachments) {
+      responseAttachments = await getUserstoryAttachments(userStoryId);
+    }
+    const reportAttachment = findReport(responseAttachments, 'pdf');
+    if (reportAttachment) {
+      await deleteAttachment(reportAttachment.id);
+    }
+  }
+
+  // Upload new report
+  const newAttachments = await postNewMainAttachmentReport(userstory);
+  const reportAttachmentId = newAttachments && newAttachments.length ? newAttachments[0] : null;
+
+  // Upload new pdf report
+  const newPdfAttachments = await postNewPdfAttachmentReport(userstory);
+  const reportPdfAttachmentId = newPdfAttachments && newPdfAttachments.length ? newPdfAttachments[0] : null;
+
+  return { reportAttachmentId, reportPdfAttachmentId };
 };
 
 const getUserstoryAttachments = (userStoryId) => {
@@ -82,14 +108,32 @@ export const getUserstoryAttachment = (reportContentUrl) => {
     });
 };
 
-const postNewAttachmentReport = (userstory) => {
+const postNewMainAttachmentReport = (userstory) => {
+  const userStoryId = userstory.content.userStory;
+  const file = new File([JSON.stringify(userstory.content)],
+    `${userStoryId}.testreport.json`);
+  return postNewAttachment(userstory, file);
+}
+
+const postNewPdfAttachmentReport = async (userstory) => {
+  const userStoryId = userstory.content.userStory;
+  const pdf = generatePdf(userstory.content);
+  const pdfDocGenerator = pdfMake.createPdf(pdf);
+  const blob = await getBlobPdf(pdfDocGenerator);
+  const file = new File([blob], `${userStoryId}.testreport.pdf`);
+  return postNewAttachment(userstory, file);
+};
+
+const getBlobPdf = (pdfDocGenerator) => {
+  return new Promise(resolve => pdfDocGenerator.getBlob((blob) => resolve(blob)));
+}
+
+const postNewAttachment = (userstory, file) => {
   const userStoryId = userstory.content.userStory;
   const { url, authorizationToken } = getRemoteConfig();
   const headers = getAttachmentHeaders(authorizationToken);
   const builtUrl = url + `/rest/api/2/issue/${userStoryId}/attachments`;
 
-  const file = new File([JSON.stringify(userstory.content)],
-    `${userStoryId}.testreport.json`);
   let formData = new FormData()
   formData.append('file', file);
 
@@ -117,9 +161,9 @@ const deleteAttachment = (attachmentId) => {
 
 }
 
-export const findReport = (response) => {
+export const findReport = (response, ext) => {
   return response
     ? response.fields.attachment
-      .find(att => att.filename === `${response.key}.testreport.json`)
+      .find(att => att.filename === `${response.key}.testreport.${ext}`)
     : null;
 }

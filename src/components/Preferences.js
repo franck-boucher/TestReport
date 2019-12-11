@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component, useState } from 'react';
 import { Modal, Header, Button, Icon, Accordion } from 'semantic-ui-react';
 
 import GeneralPreferences from './GeneralPreferences';
 import EmptyUserStoryPreferences from './EmptyUserStoryPreferences';
 import EmptyScenarioPreferences from './EmptyScenarioPreferences';
+import { TabIcon } from "../util/ui";
 
 const Store = window.require('electron-store');
 
-class Preferences extends Component {
+class PreferencesForm extends Component {
   state = {};
   componentDidMount = () => {
     const store = new Store();
@@ -103,6 +104,18 @@ class Preferences extends Component {
       </Modal>
     );
   }
+}
+
+const Preferences = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  return (
+    <Fragment>
+      <TabIcon name='setting' onClick={() => setModalOpen(true)} />
+
+      <PreferencesForm isModalOpen={isModalOpen} handleClose={() => setModalOpen(false)} />
+
+    </Fragment>
+  );
 }
 
 export default Preferences;

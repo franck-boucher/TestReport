@@ -45,13 +45,13 @@ class UserStory extends Component {
     if (userStory.content.userStory && userStory.metadata.isRemote) {
       this.setState({ uploading: true });
       uploadUserstory(userStory)
-      .then(attachment => {
-        this.setState({ uploading: false });
-        if(attachment) {
-          const { uuid } = this.props.userStory.metadata;
-          this.props.handleChange(uuid, 'metadata', 'reportAttachmentId', attachment.id);
-        }
-      })
+        .then(attachment => {
+          this.setState({ uploading: false });
+          if (attachment) {
+            const { uuid } = this.props.userStory.metadata;
+            this.props.handleChange(uuid, 'metadata', 'reportAttachmentId', attachment.id);
+          }
+        })
     }
   }
 

@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
-import { Tab, Icon, Menu, Dimmer } from 'semantic-ui-react';
+import { Icon, Dimmer } from 'semantic-ui-react';
 
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 
 import UserStory from './components/UserStory'
 import NewTabPane from './components/NewTabPane'
+import Tabs from './components/Tabs';
 import { openDialog, parseFile } from './util/utils';
 import { EmptyUserStory } from './util/constants';
 import { getUserstoryAttachment } from './components/jira/jiraFunctions'
@@ -56,14 +57,9 @@ class App extends Component {
     const panes = this.state.userStories
       .map(userStory => {
         return {
-          menuItem: (
-            <Menu.Item key='us-id' style={{ paddingRight: '0.5em' }}>
-              <UserStoryTab userStory={userStory} closeUserStory={this.closeUserStory} />
-            </Menu.Item>
-          ), render: () =>
-            <Tab.Pane>
-              <UserStory userStory={userStory} handleChange={this.handleChange} />
-            </Tab.Pane>
+          name: userStory.content.userStory,
+          title: (<UserStoryTab userStory={userStory} closeUserStory={this.closeUserStory} />),
+          content: (<UserStory userStory={userStory} handleChange={this.handleChange} />)
         }
       });
     return panes;
@@ -102,15 +98,13 @@ class App extends Component {
     return (
       <Fragment>
         <Dimmer active={this.state.dimmed} page />
-        {panes.length ?
-          <Tab id="tabs" panes={panes} />
-          :
+        <Tabs tabs={panes} fallback={
           <NewTabPane
             createReport={this.createReport}
             openReport={this.openReport}
             onClickNew={this.newUserStory}
             onClickOpen={this.openFile} />
-        }
+        } />
       </Fragment>
     );
   }
@@ -122,7 +116,7 @@ const UserStoryTab = ({ userStory, closeUserStory }) => (
     {userStory.content.userStory || 'New userstory'}
     <Icon name='close'
       onClick={() => closeUserStory(userStory.metadata.uuid)}
-      style={{ marginLeft: '0.75em' }} />
+      style={{ marginLeft: '0.75em', marginRight: 0 }} />
   </Fragment>
 )
 

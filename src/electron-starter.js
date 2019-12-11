@@ -60,9 +60,9 @@ function createWindow() {
   });
 
   // Load React Developer Tools extension, see https://electronjs.org/docs/tutorial/devtools-extension
-  BrowserWindow.addDevToolsExtension(
-    path.join(os.homedir(), 'AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\4.2.1_0')
-  )
+  // BrowserWindow.addDevToolsExtension(
+  //   path.join(os.homedir(), 'AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\4.2.1_0')
+  // )
 
   // and load the index.html of the app.
   const startUrl =

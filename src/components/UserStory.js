@@ -3,7 +3,7 @@ import { Button, Dimmer } from 'semantic-ui-react';
 
 import UserStoryInfos from '../components/UserStoryInfos';
 import TestScenarios from '../components/TestScenarios';
-import { getPercentPassed, saveAsDialog, savePdfAsDialog } from '../util/utils';
+import { getPercentPassed, saveAsZip, savePdfAsDialog } from '../util/utils';
 import { uploadUserstory } from "./jira/jiraFunctions";
 
 class UserStory extends Component {
@@ -31,7 +31,7 @@ class UserStory extends Component {
 
   saveFileAs = () => {
     this.setState({ dimmed: true });
-    saveAsDialog(this.props.userStory, () => this.setState({ dimmed: false }));
+    saveAsZip(this.props.userStory, () => this.setState({ dimmed: false }));
   };
 
   savePdfAs = () => {

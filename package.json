@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "electron-store": "^2.0.0",
+    "file-saver": "^2.0.2",
     "formik": "^2.0.7",
     "immutable": "^4.0.0-rc.12",
+    "jszip": "^3.2.2",
     "pdfmake": "^0.1.59",
     "react": "^16.8.2",
     "react-beautiful-dnd": "^10.1.1",

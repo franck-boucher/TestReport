@@ -5,6 +5,8 @@ import { DialogConfig, DialogPdfConfig } from './constants'
 const Store = window.require('electron-store');
 const { dialog } = window.require('electron').remote;
 const fs = window.require('fs');
+const JSZip= require('jszip');
+const FileSaver = require('file-saver');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const generateUuid = () => {
@@ -125,6 +127,17 @@ export const saveAsDialog = (userStory, callback) => {
       );
     }
   });
+};
+
+export const saveAsZip = (userStory, callback) =>{
+  callback();
+  let zip = new JSZip();
+  zip.file('report.json', generateJSON(userStory.content));
+  zip.file('metadata.json', generateJSON(userStory.metadata));
+  zip.generateAsync({type:"blob"})
+    .then(function(content) {
+      FileSaver.saveAs(content,`${userStory.content.userStory}.testreport`);
+    });
 };
 
 export const savePdfAsDialog = (userStory, callback) => {

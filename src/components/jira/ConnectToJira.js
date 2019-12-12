@@ -63,13 +63,13 @@ const ConnectModal = ({ isModalOpen, closeModal, submit }) => {
           {() => (
             <Form>
               <div className="ui form">
-                <Field name="url" as={InputField} title='Jira URL' />
-                <Field name="username" as={InputField} title='Username' />
-                <Field type="password" name="password" as={InputField} title='Password' />
+                <Field name="url" as={InputField} title='Jira URL' placeholder='https://...' />
+                <Field name="username" as={InputField} title='Username' placeholder='johnDoe' />
+                <Field type="password" name="password" as={InputField} title='Password' placeholder='**********' />
               </div>
               <div style={customActionsStyle}>
                 <Button onClick={closeModal}>Cancel</Button>
-                <Button primary type="submit" >Connect</Button>
+                <Button primary type="submit" style={{ marginLeft: '0.5em' }}>Connect</Button>
               </div>
             </Form>
           )}

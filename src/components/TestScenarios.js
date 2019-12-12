@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   Segment,
@@ -6,7 +6,8 @@ import {
   Accordion,
   Grid,
   Header,
-  Icon
+  Icon,
+  Label
 } from 'semantic-ui-react';
 
 import { EmptyScenario } from '../util/constants';
@@ -70,74 +71,73 @@ class TestScenarios extends Component {
   render() {
     const { scenarios } = this.props.userStoryInfos;
     return (
-      <Fragment>
-        <Segment>
-          {this.props.userStoryInfos.scenarios.length > 0 && (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-              <Droppable droppableId="droppable">
-                {(provided, snapshot) => (
-                  <div
-                    className="accordion ui"
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                    {scenarios.map((scenario, index) => (
-                      <Draggable
-                        key={scenario.uuid}
-                        draggableId={scenario.uuid}
-                        index={index}
-                      >
-                        {provided => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                              marginBottom: '1em',
-                              ...provided.draggableProps.style
-                            }}
+      <Segment raised style={{ paddingTop: '1.5em' }}>
+        <Label attached='top' size='large'>Test scenarios</Label>
+        {this.props.userStoryInfos.scenarios.length > 0 && (
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided, snapshot) => (
+                <div
+                  className="accordion ui"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {scenarios.map((scenario, index) => (
+                    <Draggable
+                      key={scenario.uuid}
+                      draggableId={scenario.uuid}
+                      index={index}
+                    >
+                      {provided => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            marginBottom: '1em',
+                            ...provided.draggableProps.style
+                          }}
+                        >
+                          <AccordionSegment
+                            isActive={
+                              this.props.selectedScenario === scenario.uuid
+                            }
+                            scenario={scenario}
+                            handleClick={this.setActive}
+                            handleClone={this.cloneScenario}
+                            handleDelete={this.deleteScenario}
                           >
-                            <AccordionSegment
-                              isActive={
-                                this.props.selectedScenario === scenario.uuid
-                              }
+                            <Scenario
                               scenario={scenario}
-                              handleClick={this.setActive}
-                              handleClone={this.cloneScenario}
-                              handleDelete={this.deleteScenario}
-                            >
-                              <Scenario
-                                scenario={scenario}
-                                updateScenario={this.updateScenario}
-                              />
-                            </AccordionSegment>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          )}
-          {this.props.userStoryInfos.scenarios.length === 0 && (
-            <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
-              No scenario defined
-            </p>
-          )}
-          <Button
-            primary
-            basic
-            onClick={this.addNewScenario}
-            style={{ marginTop: '1em' }}
-            fluid
-            className="basic-inverted"
-          >
-            New scenario
-          </Button>
-        </Segment>
-      </Fragment>
+                              updateScenario={this.updateScenario}
+                            />
+                          </AccordionSegment>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        )}
+        {this.props.userStoryInfos.scenarios.length === 0 && (
+          <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
+            No scenario defined
+          </p>
+        )}
+        <Button
+          primary
+          basic
+          onClick={this.addNewScenario}
+          style={{ marginTop: '1em' }}
+          fluid
+          className="basic-inverted"
+        >
+          New scenario
+        </Button>
+      </Segment>
     );
   }
 }

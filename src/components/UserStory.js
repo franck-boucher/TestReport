@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Grid, Tab, Button, Dimmer } from 'semantic-ui-react';
+import { Button, Dimmer } from 'semantic-ui-react';
 
 import UserStoryInfos from '../components/UserStoryInfos';
-import TestStatus from '../components/TestStatus';
 import TestScenarios from '../components/TestScenarios';
 import { getPercentPassed, saveAsDialog, savePdfAsDialog } from '../util/utils';
 import { uploadUserstory } from "./jira/jiraFunctions";
@@ -59,32 +58,8 @@ class UserStory extends Component {
     const { dimmed, uploading } = this.state;
     const userStoryContent = this.props.userStory.content;
     const userStoryMetadata = this.props.userStory.metadata;
-    const { isRemote, summary } = userStoryMetadata
+    const { isRemote, summary } = userStoryMetadata;
     const percentPassed = getPercentPassed(userStoryContent);
-    const panes = [
-      {
-        menuItem: 'User story infos',
-        render: () => (
-          <UserStoryInfos
-            isRemote={isRemote}
-            summary={summary}
-            userStoryInfos={userStoryContent}
-            handleFieldChange={this.handleFieldChange}
-          />
-        )
-      },
-      {
-        menuItem: 'Test scenario',
-        render: () => (
-          <TestScenarios
-            selectScenario={this.selectScenario}
-            selectedScenario={userStoryMetadata.selectedScenario}
-            handleFieldChange={this.handleFieldChange}
-            userStoryInfos={userStoryContent}
-          />
-        )
-      }
-    ];
     return (
       <Fragment>
 
@@ -100,23 +75,20 @@ class UserStory extends Component {
         </div>
 
         <div style={{ padding: '1em 0' }}>
-          <Grid>
-            <Grid.Column width={10}>
-              <Tab
-                menu={{ secondary: true, pointing: true }}
-                panes={panes}
-                activeIndex={userStoryMetadata.activeTabIndex}
-                onTabChange={this.handleTabChange}
-              />
-            </Grid.Column>
-            <Grid.Column width={6}>
-              <TestStatus
-                scenarios={userStoryContent.scenarios}
-                selectScenario={this.selectScenario}
-                percentPassed={percentPassed}
-              />
-            </Grid.Column>
-          </Grid>
+          <UserStoryInfos
+            isRemote={isRemote}
+            summary={summary}
+            percentPassed={percentPassed}
+            userStoryInfos={userStoryContent}
+            handleFieldChange={this.handleFieldChange}
+          />
+
+          <TestScenarios
+            selectScenario={this.selectScenario}
+            selectedScenario={userStoryMetadata.selectedScenario}
+            handleFieldChange={this.handleFieldChange}
+            userStoryInfos={userStoryContent}
+          />
         </div>
 
       </Fragment>

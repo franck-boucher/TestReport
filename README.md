@@ -1,6 +1,6 @@
 # TestReport
 
-This app is used to generate CSV test reports of _to-be-tested_ developed features of a project.
+This app is used to generate JSON test reports of _to-be-tested_ developed features of a project.
 This project is still at its early stages, so keep in mind the workflow and pre-filled values are still oriented to my experiences and needs. For now.
 
 ![Screenshot of the app](https://i.imgur.com/IKyjGPN.png)

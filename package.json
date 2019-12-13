@@ -1,7 +1,7 @@
 {
   "name": "test-report",
   "description": "Small app that generates test reports of newly developed features",
-  "version": "1.9.0",
+  "version": "2.0.0",
   "private": true,
   "author": {
     "name": "Franck Boucher",
@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "electron-store": "^2.0.0",
+    "file-saver": "^2.0.2",
+    "formik": "^2.0.7",
     "immutable": "^4.0.0-rc.12",
-    "papaparse": "^4.6.3",
+    "jszip": "^3.2.2",
     "pdfmake": "^0.1.59",
     "react": "^16.8.2",
     "react-beautiful-dnd": "^10.1.1",
@@ -19,7 +21,7 @@
     "react-hotkeys": "^1.1.4",
     "react-scripts": "2.1.5",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.85.0"
+    "semantic-ui-react": "^0.88.2"
   },
   "build": {
     "extends": null,
@@ -66,7 +68,7 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "dev": "nf start -p 3000",
-    "electron-build": "yarn build && electron-builder",
+    "electron-build": "npm run build && electron-builder -w",
     "release": "yarn build && electron-builder --publish=always",
     "pack": "yarn build && yarn electron-build"
   },

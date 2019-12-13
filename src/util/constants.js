@@ -1,4 +1,5 @@
 import { Map, List } from 'immutable';
+import { generateUuid } from './utils'
 
 const Store = window.require('electron-store');
 
@@ -21,22 +22,34 @@ export const EmptyUserStory = () => {
   const store = new Store();
   const emptyUserStory = store.get('emptyUserStory');
   return Map({
-    userStory: emptyUserStory.userStory,
-    environment: emptyUserStory.environment,
-    type: emptyUserStory.type,
-    author: emptyUserStory.author,
-    tools: List(emptyUserStory.tools),
-    comments: emptyUserStory.comments,
-    asumptions: emptyUserStory.asumptions,
-    scenarios: List(emptyUserStory.scenarios)
+    content: {
+      userStory: emptyUserStory.userStory,
+      environment: emptyUserStory.environment,
+      type: emptyUserStory.type,
+      author: emptyUserStory.author,
+      tools: List(emptyUserStory.tools),
+      comments: emptyUserStory.comments,
+      asumptions: emptyUserStory.asumptions,
+      scenarios: List(emptyUserStory.scenarios)
+    },
+    metadata: {
+      uuid: generateUuid(),
+      summary: '',
+      isRemote: false,
+      remote: '',
+      reportAttachmentId: '',
+      reportPdfAttachmentId: '',
+      selectedScenario: '',
+      activeTabIndex: 0
+    }
   });
 };
 
 export const DialogConfig = {
   properties: ['openFile'],
   filters: [
+    { name: 'Testreport Files', extensions: ['testreport', 'TESTREPORT'] },
     { name: 'Json Files', extensions: ['json', 'JSON'] },
-    { name: 'CSV Files', extensions: ['csv', 'CSV'] },
     { name: 'All Files', extensions: ['*'] }
   ]
 };
@@ -45,27 +58,3 @@ export const DialogPdfConfig = {
   properties: ['openFile'],
   filters: [{ name: 'PDF Files', extensions: ['pdf', 'PDF'] }]
 };
-
-export const EmptyCSV = List([
-  List(['', '', '', '', '', '', '', '', '']),
-  List(['', 'User story:', '', '', '', '', '', '', '']),
-  List(['', 'Environment:', '', '', '', '', '', '', '']),
-  List(['', 'Type:', '', '', '', '', '', '', '']),
-  List(['', 'Author:', '', '', '', '', '', '', '']),
-  List(['', 'Tools:', '', '', '', '', '', '', '']),
-  List(['', 'General comment:', '', '', '', '', '', '', '']),
-  List(['', 'Asumptions: ', '', '', '', '', '', '', '']),
-  List(['', '', '', '', '', '', '', '', '']),
-  List([
-    '',
-    'Test status',
-    'Scenario title',
-    'Scenario description',
-    'URL parameters',
-    'Headers',
-    'Current result',
-    'Expected result',
-    'Defects',
-    'Comments'
-  ])
-]);

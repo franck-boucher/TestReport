@@ -104,10 +104,16 @@ export const getPdfColorScenario = status => {
 export const openDialog = (onSuccess, callback) => {
   dialog.showOpenDialog(DialogConfig, filePaths => {
     callback();
-    if (filePaths) {
+    if (filePaths.length) {
       const filePath = filePaths[0];
-      const fileContent = fs.readFileSync(filePath).toString();
-      onSuccess(fileContent);
+      fs.readFile(filePath, (err, data) => {
+        if (err) console.error('Error while trying to read archive from file system');
+        JSZip.loadAsync(data)
+          .then(zip => zip.file('report.json')
+            .async('string')
+            .then(content => onSuccess(content))
+          );
+      });
     } else {
       console.error(
         'Error while trying to select file path from file system'

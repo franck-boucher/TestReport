@@ -48,6 +48,7 @@ export const EmptyUserStory = () => {
 export const DialogConfig = {
   properties: ['openFile'],
   filters: [
+    { name: 'Testreport Files', extensions: ['testreport', 'TESTREPORT'] },
     { name: 'Json Files', extensions: ['json', 'JSON'] },
     { name: 'All Files', extensions: ['*'] }
   ]

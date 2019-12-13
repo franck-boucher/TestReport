@@ -1,6 +1,6 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { getRemoteConfig, buildConfig, generatePdf } from '../../util/utils'
+import { getRemoteConfig, buildConfig, generatePdf, getZip } from '../../util/utils'
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -51,7 +51,7 @@ export const uploadUserstory = async (userstory) => {
     await deleteAttachment(userstory.metadata.reportAttachmentId);
   } else {
     responseAttachments = await getUserstoryAttachments(userStoryId);
-    const reportAttachment = findReport(responseAttachments, 'json');
+    const reportAttachment = findReport(responseAttachments, 'testreport');
     if (reportAttachment) {
       await deleteAttachment(reportAttachment.id);
     }
@@ -64,7 +64,7 @@ export const uploadUserstory = async (userstory) => {
     if (!responseAttachments) {
       responseAttachments = await getUserstoryAttachments(userStoryId);
     }
-    const reportAttachment = findReport(responseAttachments, 'pdf');
+    const reportAttachment = findReport(responseAttachments, 'testreport.pdf');
     if (reportAttachment) {
       await deleteAttachment(reportAttachment.id);
     }
@@ -108,10 +108,10 @@ export const getUserstoryAttachment = (reportContentUrl) => {
     });
 };
 
-const postNewMainAttachmentReport = (userstory) => {
+const postNewMainAttachmentReport = async (userstory) => {
   const userStoryId = userstory.content.userStory;
-  const file = new File([JSON.stringify(userstory.content)],
-    `${userStoryId}.testreport.json`);
+  const blob = await getZip(userstory);
+  const file = new File([blob], `${userStoryId}.testreport`);
   return postNewAttachment(userstory, file);
 }
 
@@ -164,6 +164,6 @@ const deleteAttachment = (attachmentId) => {
 export const findReport = (response, ext) => {
   return response
     ? response.fields.attachment
-      .find(att => att.filename === `${response.key}.testreport.${ext}`)
+      .find(att => att.filename === `${response.key}.${ext}`)
     : null;
 }

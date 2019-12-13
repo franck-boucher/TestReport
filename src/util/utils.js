@@ -59,14 +59,14 @@ export const isFileJson = fileName => {
 
 export const buildAuthToken = (username, password) => {
   return btoa(`${username}:${password}`)
-}
+};
 
 export const buildConfig = ({ url, username, password }) => {
   return {
     url,
     authorizationToken: buildAuthToken(username, password)
-  }
-}
+  };
+};
 
 export const updateRemoteConfig = ({ url, authorizationToken }) => {
   const store = new Store();
@@ -74,12 +74,12 @@ export const updateRemoteConfig = ({ url, authorizationToken }) => {
   issueTrackingApp.jira.url = url;
   issueTrackingApp.jira.authorizationToken = authorizationToken;
   store.set('issueTrackingApp', issueTrackingApp);
-}
+};
 
 export const getRemoteConfig = () => {
   const store = new Store();
   return store.get('issueTrackingApp').jira;
-}
+};
 
 export const getPercentPassed = userStory => {
   const { scenarios } = userStory;
@@ -131,14 +131,16 @@ export const saveAsDialog = (userStory, callback) => {
 
 export const saveAsZip = (userStory, callback) =>{
   callback();
+  getZip(userStory)
+    .then(content => FileSaver.saveAs(content,`${userStory.content.userStory}.testreport`));
+};
+
+export const getZip = (userStory) => {
   let zip = new JSZip();
   zip.file('report.json', generateJSON(userStory.content));
   zip.file('metadata.json', generateJSON(userStory.metadata));
-  zip.generateAsync({type:"blob"})
-    .then(function(content) {
-      FileSaver.saveAs(content,`${userStory.content.userStory}.testreport`);
-    });
-};
+  return zip.generateAsync({type:"blob"});
+}
 
 export const savePdfAsDialog = (userStory, callback) => {
   dialog.showSaveDialog(DialogPdfConfig, filePath => {

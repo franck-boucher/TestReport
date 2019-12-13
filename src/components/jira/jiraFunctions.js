@@ -1,7 +1,9 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { getRemoteConfig, buildConfig, generatePdf, getZip } from '../../util/utils'
 
+import { getRemoteConfig, buildConfig, generatePdf, getZip, parseFile } from '../../util/utils'
+
+const JSZip= require('jszip');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const connectToJira = (url, username, password) => {
@@ -51,7 +53,7 @@ export const uploadUserstory = async (userstory) => {
     await deleteAttachment(userstory.metadata.reportAttachmentId);
   } else {
     responseAttachments = await getUserstoryAttachments(userStoryId);
-    const reportAttachment = findReport(responseAttachments, 'testreport');
+    const reportAttachment = findReport(responseAttachments);
     if (reportAttachment) {
       await deleteAttachment(reportAttachment.id);
     }
@@ -100,7 +102,10 @@ export const getUserstoryAttachment = (reportContentUrl) => {
   const headers = getHeaders(authorizationToken);
   return fetch(reportContentUrl, { method: 'GET', headers })
     .then(checkStatus)
-    .then(response => response.json())
+    .then(response => response.blob())
+    .then(JSZip.loadAsync)
+    .then(zip => zip.file("report.json").async("string"))
+    .then(reportContent => parseFile(reportContent))
     .catch(err => {
       console.error('Error while loading attachment:');
       console.error(err);
@@ -161,7 +166,7 @@ const deleteAttachment = (attachmentId) => {
 
 }
 
-export const findReport = (response, ext) => {
+export const findReport = (response, ext = 'testreport') => {
   return response
     ? response.fields.attachment
       .find(att => att.filename === `${response.key}.${ext}`)

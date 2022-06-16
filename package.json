@@ -82,7 +82,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "electron": "^4.0.1",
+    "electron": "^15.5.5",
     "electron-builder": "^20.38.4",
     "foreman": "^3.0.1",
     "typescript": "^3.3.4000"
